@@ -1,0 +1,23 @@
+{
+  "name": "database",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "scripts": {
+    "generate": "drizzle-kit generate:pg",
+    "push": "drizzle-kit push:pg",
+    "studio": "drizzle-kit studio",
+    "seed": "ts-node src/seed.ts",
+    "reset": "ts-node src/reset.ts"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.30.0",
+    "postgres": "^3.4.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.20.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.3.2"
+  }
+}
