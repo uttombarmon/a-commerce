@@ -122,12 +122,35 @@ export const cartItems = pgTable('cart_items', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
+// --- Wishlists Table ---
+export const wishlists = pgTable('wishlists', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').references(() => users.id).notNull(),
+  name: varchar('name', { length: 255 }).notNull(),
+  slug: varchar('slug', { length: 255 }).unique().notNull(),
+  isDefault: boolean('is_default').default(false).notNull(),
+  isPublic: boolean('is_public').default(false).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
 // --- Wishlist Items Table ---
 export const wishlistItems = pgTable('wishlist_items', {
+  id: serial('id').primaryKey(),
+  wishlistId: integer('wishlist_id').references(() => wishlists.id).notNull(),
+  productId: integer('product_id').references(() => products.id).notNull(),
+  variantId: integer('variant_id').references(() => productVariants.id),
+  addedPrice: decimal('added_price', { precision: 12, scale: 2 }).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+// --- Product Alerts Table ---
+export const productAlerts = pgTable('product_alerts', {
   id: serial('id').primaryKey(),
   userId: integer('user_id').references(() => users.id).notNull(),
   productId: integer('product_id').references(() => products.id).notNull(),
   variantId: integer('variant_id').references(() => productVariants.id),
+  type: varchar('type', { length: 50 }).notNull(), // 'price_drop', 'restock'
+  notified: boolean('notified').default(false).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
@@ -207,7 +230,8 @@ export const usersRelations = relations(users, ({ one, many }) => ({
     fields: [users.id],
     references: [cart.userId],
   }),
-  wishlistItems: many(wishlistItems),
+  wishlists: many(wishlists),
+  productAlerts: many(productAlerts),
   addresses: many(addresses),
 }));
 
@@ -292,10 +316,18 @@ export const cartItemsRelations = relations(cartItems, ({ one }) => ({
   }),
 }));
 
-export const wishlistItemsRelations = relations(wishlistItems, ({ one }) => ({
+export const wishlistsRelations = relations(wishlists, ({ one, many }) => ({
   user: one(users, {
-    fields: [wishlistItems.userId],
+    fields: [wishlists.userId],
     references: [users.id],
+  }),
+  items: many(wishlistItems),
+}));
+
+export const wishlistItemsRelations = relations(wishlistItems, ({ one }) => ({
+  wishlist: one(wishlists, {
+    fields: [wishlistItems.wishlistId],
+    references: [wishlists.id],
   }),
   product: one(products, {
     fields: [wishlistItems.productId],
@@ -303,6 +335,21 @@ export const wishlistItemsRelations = relations(wishlistItems, ({ one }) => ({
   }),
   variant: one(productVariants, {
     fields: [wishlistItems.variantId],
+    references: [productVariants.id],
+  }),
+}));
+
+export const productAlertsRelations = relations(productAlerts, ({ one }) => ({
+  user: one(users, {
+    fields: [productAlerts.userId],
+    references: [users.id],
+  }),
+  product: one(products, {
+    fields: [productAlerts.productId],
+    references: [products.id],
+  }),
+  variant: one(productVariants, {
+    fields: [productAlerts.variantId],
     references: [productVariants.id],
   }),
 }));

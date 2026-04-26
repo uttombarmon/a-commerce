@@ -6,11 +6,14 @@ import { useState, useEffect } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCart } from "@/context/CartContext";
+import { useWishlistStore } from "@/store/wishlistStore";
 import { SearchAutocomplete } from "@/components/search/SearchAutocomplete";
 import { MiniCartPopover } from "@/components/cart/MiniCartPopover";
+import { Heart } from "lucide-react";
 
 export function Navbar() {
   const { itemCount } = useCart();
+  const wishlistItemsCount = useWishlistStore(state => state.lists.reduce((acc, list) => acc + list.items.length, 0));
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -68,6 +71,16 @@ export function Navbar() {
             <button className="p-2 text-foreground hover:bg-muted rounded-full transition-colors hidden sm:block">
               <User size={20} />
             </button>
+
+            {/* Wishlist */}
+            <Link href="/wishlists" className="relative p-2 text-foreground hover:bg-muted rounded-full transition-colors hidden sm:flex items-center justify-center">
+              <Heart size={20} />
+              {wishlistItemsCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border-2 border-surface">
+                  {wishlistItemsCount}
+                </span>
+              )}
+            </Link>
 
             {/* Cart */}
             <MiniCartPopover />
