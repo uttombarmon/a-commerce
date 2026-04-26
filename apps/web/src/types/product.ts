@@ -1,4 +1,4 @@
-// ─── Product Domain Types ─────────────────────────────────────────────────────
+// ─── Base Product (used by ProductCard) ───────────────────────────────────────
 
 export interface Product {
   id: string | number;
@@ -22,10 +22,113 @@ export interface Product {
 }
 
 export interface ProductCardProps extends Product {
-  /** Override for className on the root element */
   className?: string;
-  /** Called when "Add to cart" is clicked */
   onAddToCart?: (id: string | number) => void;
-  /** Called when the Quick View button is clicked */
   onQuickView?: (id: string | number) => void;
+}
+
+// ─── Product Detail (full PDP data) ──────────────────────────────────────────
+
+export type StockStatus = "in_stock" | "low_stock" | "out_of_stock";
+
+export interface ProductImage {
+  id: string;
+  url: string;
+  alt: string;
+  /** Used as thumbnail */
+  thumb: string;
+}
+
+export interface ColorVariant {
+  id: string;
+  label: string;
+  /** Hex color value */
+  hex: string;
+  /** Optional image to switch to when this color is selected */
+  imageIndex?: number;
+}
+
+export interface SizeVariant {
+  id: string;
+  label: string;
+  available: boolean;
+}
+
+export interface ProductSpec {
+  label: string;
+  value: string;
+}
+
+export interface Seller {
+  id: string;
+  name: string;
+  rating: number;
+  reviewCount: number;
+  /** Positive feedback % */
+  positiveRate: number;
+  /** Response rate % */
+  responseRate: number;
+  /** avg response time label e.g. "within 2 hours" */
+  responseTime: string;
+  verified: boolean;
+  joinedYear: number;
+}
+
+export interface ProductReview {
+  id: string;
+  authorName: string;
+  /** reviewer's avatar url, or null for initials fallback */
+  avatarUrl?: string;
+  rating: number;
+  title: string;
+  body: string;
+  date: string;
+  verified: boolean;
+  helpful: number;
+  notHelpful: number;
+  images?: string[];
+}
+
+export interface RatingBreakdown {
+  stars: 5 | 4 | 3 | 2 | 1;
+  count: number;
+  pct: number;
+}
+
+export interface QAItem {
+  id: string;
+  question: string;
+  answer: string;
+  askedBy: string;
+  answeredBy: string;
+  date: string;
+}
+
+export interface ProductDetail extends Product {
+  brand: string;
+  sku: string;
+  slug: string;
+  category: string;
+  subcategory: string;
+  stockStatus: StockStatus;
+  stockCount: number;
+  images: ProductImage[];
+  colors: ColorVariant[];
+  sizes: SizeVariant[];
+  description: string;
+  features: string[];
+  specs: ProductSpec[];
+  seller: Seller;
+  ratingBreakdown: RatingBreakdown[];
+  reviewList: ProductReview[];
+  totalReviews: number;
+  qa: QAItem[];
+  /** Minimum order value for free shipping */
+  freeShippingThreshold: number;
+  /** Estimated delivery label */
+  estimatedDelivery: string;
+  /** Return window in days */
+  returnDays: number;
+  /** Monthly EMI amount */
+  emiMonthly?: number;
 }

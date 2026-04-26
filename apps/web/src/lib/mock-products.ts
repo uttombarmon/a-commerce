@@ -1,0 +1,215 @@
+import type { ProductDetail } from "@/types/product";
+
+// ─── Rich mock product data ───────────────────────────────────────────────────
+
+export const MOCK_PRODUCTS: Record<string, ProductDetail> = {
+  "101": {
+    id: "101",
+    brand: "Sony",
+    sku: "WH1000XM5-BLK",
+    slug: "sony-wh1000xm5-headphones",
+    title: "Sony WH-1000XM5 Wireless Noise Cancelling Headphones with Auto NC Optimizer",
+    category: "Electronics",
+    subcategory: "Headphones",
+    price: 348.00,
+    comparePrice: 399.99,
+    rating: 4.8,
+    reviews: 12450,
+    sellerName: "Sony Official Store",
+    soldCount: 8500,
+    freeShipping: true,
+    freeShippingThreshold: 0,
+    estimatedDelivery: "Tomorrow, Oct 24",
+    returnDays: 30,
+    outOfStock: false,
+    stockStatus: "in_stock",
+    stockCount: 143,
+    emiMonthly: 29,
+    image: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?q=80&w=800&auto=format&fit=crop",
+    images: [
+      { id: "i1", url: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?q=80&w=800&auto=format&fit=crop", thumb: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?q=80&w=120&auto=format&fit=crop", alt: "Sony WH-1000XM5 front view" },
+      { id: "i2", url: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=800&auto=format&fit=crop", thumb: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=120&auto=format&fit=crop", alt: "Sony WH-1000XM5 side view" },
+      { id: "i3", url: "https://images.unsplash.com/photo-1484704849700-f032a568e944?q=80&w=800&auto=format&fit=crop", thumb: "https://images.unsplash.com/photo-1484704849700-f032a568e944?q=80&w=120&auto=format&fit=crop", alt: "Sony WH-1000XM5 details" },
+      { id: "i4", url: "https://images.unsplash.com/photo-1524678606370-a47ad25cb82a?q=80&w=800&auto=format&fit=crop", thumb: "https://images.unsplash.com/photo-1524678606370-a47ad25cb82a?q=80&w=120&auto=format&fit=crop", alt: "Sony WH-1000XM5 lifestyle" },
+    ],
+    colors: [
+      { id: "c1", label: "Midnight Black", hex: "#1a1a1a", imageIndex: 0 },
+      { id: "c2", label: "Platinum Silver", hex: "#d1d5db", imageIndex: 1 },
+      { id: "c3", label: "Navy Blue", hex: "#1e3a8a", imageIndex: 2 },
+    ],
+    sizes: [
+      { id: "s1", label: "One Size", available: true },
+    ],
+    description: `
+      <p>Our best noise cancelling just got better. See how these Sony noise cancelling headphones combine our best ever noise cancelling technology with superlative sound for a truly remarkable listening experience.</p>
+      <p>With <strong>Auto NC Optimizer</strong>, noise cancelling performance is automatically optimized based on your wearing conditions and environment. The <strong>Integrated Processor V1</strong> unlocks the full potential of our HD Noise Cancelling Processor QN1 to deliver unprecedented noise cancelling quality.</p>
+      <p>Specially designed 30mm driver unit with light and rigid dome using carbon fiber composite material improves high frequency sensitivity for more natural sound quality.</p>
+    `,
+    features: [
+      "Industry-leading noise cancellation with 8 microphones",
+      "Auto NC Optimizer automatically adjusts based on wearing conditions",
+      "Magnificent Sound, engineered to perfection with the new Integrated Processor V1",
+      "Crystal clear hands-free calling with 4 beamforming microphones",
+      "Up to 30-hour battery life with quick charging (3 min charge for 3 hours of playback)",
+    ],
+    specs: [
+      { label: "Weight", value: "Approx. 250g" },
+      { label: "Headphone Type", value: "Closed, dynamic" },
+      { label: "Driver Unit", value: "30mm" },
+      { label: "Magnet", value: "Neodymium" },
+      { label: "Impedance", value: "48 ohm (1kHz) (when connecting via the headphone cable with the unit turned on), 16 ohm (1kHz) (when connecting via the headphone cable with the unit turned off)" },
+      { label: "Frequency Response", value: "4 Hz - 40,000 Hz (JEITA)" },
+      { label: "Bluetooth", value: "Version 5.2" },
+    ],
+    seller: {
+      id: "s1",
+      name: "Sony Official Store",
+      rating: 4.9,
+      reviewCount: 23840,
+      positiveRate: 98,
+      responseRate: 96,
+      responseTime: "within 2 hours",
+      verified: true,
+      joinedYear: 2012,
+    },
+    ratingBreakdown: [
+      { stars: 5, count: 9020, pct: 72 },
+      { stars: 4, count: 2365, pct: 19 },
+      { stars: 3, count: 623, pct: 5 },
+      { stars: 2, count: 248, pct: 2 },
+      { stars: 1, count: 194, pct: 2 },
+    ],
+    totalReviews: 12450,
+    reviewList: [
+      {
+        id: "r1",
+        authorName: "Alex Thompson",
+        rating: 5,
+        title: "Silence has never sounded this good",
+        body: "The jump from the XM4 to XM5 is noticeable in the noise cancellation. It's much better at filtering out high-pitched noises and human voices. The design is sleeker and more comfortable for long sessions.",
+        date: "Oct 12, 2024",
+        verified: true,
+        helpful: 156,
+        notHelpful: 2,
+        images: ["https://images.unsplash.com/photo-1546435770-a3e426bf472b?q=80&w=200&auto=format&fit=crop"],
+      },
+      {
+        id: "r2",
+        authorName: "Sarah Jenkins",
+        rating: 5,
+        title: "Best ANC in the market period.",
+        body: "I use these for work and travel. The multipoint connection is seamless. I can be on a Zoom call on my laptop and then instantly switch to my phone when a call comes in. Worth every penny.",
+        date: "Sep 28, 2024",
+        verified: true,
+        helpful: 89,
+        notHelpful: 1,
+      },
+    ],
+    qa: [
+      {
+        id: "q1",
+        question: "Does it come with a 3.5mm cable?",
+        answer: "Yes, it includes a high-quality 3.5mm audio cable for wired listening when the battery is low or for devices without Bluetooth.",
+        askedBy: "audiophile_mike",
+        answeredBy: "Sony Official Store",
+        date: "Oct 05, 2024",
+      },
+    ],
+    freeShippingThreshold: 0,
+    estimatedDelivery: "Tomorrow, Oct 24",
+    returnDays: 30,
+    emiMonthly: 29,
+  },
+  "102": {
+    id: "102",
+    brand: "Apple",
+    sku: "APL-W9-45-ST",
+    slug: "apple-watch-series-9",
+    title: "Apple Watch Series 9 GPS 45mm Starlight Aluminum Case with Starlight Sport Band",
+    category: "Electronics",
+    subcategory: "Wearables",
+    price: 429.00,
+    comparePrice: 429.00,
+    rating: 4.7,
+    reviews: 8320,
+    sellerName: "Apple Store",
+    soldCount: 4200,
+    freeShipping: true,
+    freeShippingThreshold: 0,
+    estimatedDelivery: "Wednesday, Oct 25",
+    returnDays: 14,
+    outOfStock: false,
+    stockStatus: "low_stock",
+    stockCount: 5,
+    emiMonthly: 36,
+    image: "https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?q=80&w=800&auto=format&fit=crop",
+    images: [
+      { id: "i1", url: "https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?q=80&w=800&auto=format&fit=crop", thumb: "https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?q=80&w=120&auto=format&fit=crop", alt: "Apple Watch Series 9 front" },
+      { id: "i2", url: "https://images.unsplash.com/photo-1551816230-ef5deaed4a26?q=80&w=800&auto=format&fit=crop", thumb: "https://images.unsplash.com/photo-1551816230-ef5deaed4a26?q=80&w=120&auto=format&fit=crop", alt: "Apple Watch side view" },
+    ],
+    colors: [
+      { id: "c1", label: "Starlight", hex: "#f0ede6", imageIndex: 0 },
+      { id: "c2", label: "Midnight", hex: "#1a1c1e", imageIndex: 1 },
+      { id: "c3", label: "Silver", hex: "#e5e7eb", imageIndex: 0 },
+    ],
+    sizes: [
+      { id: "s1", label: "41mm", available: true },
+      { id: "s2", label: "45mm", available: true },
+    ],
+    description: `
+      <p>Apple Watch Series 9 is more capable, easier to use, and faster. The S9 chip enables a superbright display and a magical new way to quickly and easily interact with your Apple Watch without touching the screen.</p>
+      <p>Advanced health, safety, and activity features provide powerful insights and help when you need it. And redesigned apps in watchOS 10 give you more information at a glance.</p>
+    `,
+    features: [
+      "S9 SiP with 60% more transistors for incredible speed",
+      "Double Tap gesture to control your watch without touching the screen",
+      "Brightest display ever — up to 2000 nits",
+      "On-device Siri is faster and more private",
+      "Carbon neutral options available",
+    ],
+    specs: [
+      { label: "Case Material", value: "Aluminum" },
+      { label: "Display", value: "Always-On Retina display, up to 2000 nits" },
+      { label: "Chip", value: "S9 SiP with 64-bit dual-core processor" },
+      { label: "Connectivity", value: "GPS, Wi-Fi, Bluetooth 5.3" },
+      { label: "Water Resistance", value: "50m" },
+    ],
+    seller: {
+      id: "s2",
+      name: "Apple Store",
+      rating: 4.95,
+      reviewCount: 45200,
+      positiveRate: 99,
+      responseRate: 98,
+      responseTime: "within 1 hour",
+      verified: true,
+      joinedYear: 2010,
+    },
+    ratingBreakdown: [
+      { stars: 5, count: 6200, pct: 75 },
+      { stars: 4, count: 1200, pct: 14 },
+      { stars: 3, count: 500, pct: 6 },
+      { stars: 2, count: 220, pct: 3 },
+      { stars: 1, count: 200, pct: 2 },
+    ],
+    totalReviews: 8320,
+    reviewList: [],
+    qa: [],
+    freeShippingThreshold: 0,
+    estimatedDelivery: "Wednesday, Oct 25",
+    returnDays: 14,
+    emiMonthly: 36,
+  },
+};
+
+export function getMockProduct(id: string): ProductDetail | null {
+  return MOCK_PRODUCTS[id] ?? MOCK_PRODUCTS["101"];
+}
+
+// Related products for the horizontal scroll (reuses Product shape)
+export const RELATED_PRODUCTS = [
+  { id: 201, title: "Bose QuietComfort Ultra Headphones", price: 429.00, comparePrice: 429.00, rating: 4.7, reviews: 3200, image: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?q=80&w=400&auto=format&fit=crop", sellerName: "Bose", soldCount: 1200, freeShipping: true },
+  { id: 202, title: "Sennheiser Momentum 4 Wireless", price: 299.95, comparePrice: 379.95, rating: 4.6, reviews: 5400, image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=400&auto=format&fit=crop", sellerName: "Sennheiser", soldCount: 2300, freeShipping: true },
+  { id: 203, title: "AirPods Max - Space Gray", price: 479.00, comparePrice: 549.00, rating: 4.5, reviews: 15200, image: "https://images.unsplash.com/photo-1484704849700-f032a568e944?q=80&w=400&auto=format&fit=crop", sellerName: "Apple Store", soldCount: 8900, freeShipping: true },
+  { id: 204, title: "Jabra Elite 85h", price: 199.99, comparePrice: 249.99, rating: 4.3, reviews: 8900, image: "https://images.unsplash.com/photo-1524678606370-a47ad25cb82a?q=80&w=400&auto=format&fit=crop", sellerName: "Jabra", soldCount: 3400, freeShipping: false },
+];

@@ -1,0 +1,377 @@
+/* ═══════════════════════════════════════════════════════
+   PREMIUM PDP DESIGN SYSTEM
+   ═══════════════════════════════════════════════════════ */
+
+:root {
+  --pdp-radius-lg: 24px;
+  --pdp-radius-md: 16px;
+  --pdp-radius-sm: 10px;
+  --pdp-shadow-soft: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
+  --pdp-shadow-hover: 0 20px 60px -15px rgba(0, 0, 0, 0.12);
+  --pdp-glass: rgba(255, 255, 255, 0.7);
+  --pdp-accent: #4f46e5;
+  --pdp-accent-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  --pdp-success: #10b981;
+  --pdp-warning: #f59e0b;
+  --pdp-danger: #ef4444;
+}
+
+.dark {
+  --pdp-glass: rgba(24, 24, 27, 0.7);
+  --pdp-shadow-soft: 0 10px 40px -10px rgba(0, 0, 0, 0.3);
+  --pdp-shadow-hover: 0 20px 60px -15px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Page Layout ─────────────────────────────────────── */
+.pdp-page {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 120px 24px 80px;
+  background-color: var(--background);
+}
+
+.pdp-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .pdp-layout {
+    grid-template-columns: minmax(400px, 1.2fr) 1fr 340px;
+  }
+  
+  .pdp-layout__gallery {
+    position: sticky;
+    top: 100px;
+  }
+}
+
+/* ── Image Gallery ───────────────────────────────────── */
+.pdp-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pdp-gallery__main {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: var(--pdp-radius-lg);
+  overflow: hidden;
+  background: var(--muted);
+  border: 1px solid var(--border);
+  box-shadow: var(--pdp-shadow-soft);
+  cursor: zoom-in;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pdp-gallery__main:hover {
+  box-shadow: var(--pdp-shadow-hover);
+}
+
+.pdp-gallery__img {
+  object-fit: contain;
+  padding: 32px;
+  transition: transform 0.1s linear;
+  will-change: transform;
+}
+
+.pdp-gallery__zoom-hint {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--pdp-glass);
+  backdrop-filter: blur(12px);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+  opacity: 0.8;
+  z-index: 10;
+}
+
+.pdp-gallery__thumbs {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  padding: 4px;
+}
+
+.pdp-gallery__thumb {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: var(--pdp-radius-md);
+  overflow: hidden;
+  border: 2px solid transparent;
+  background: var(--card);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.pdp-gallery__thumb:hover {
+  transform: translateY(-2px);
+  border-color: var(--border);
+}
+
+.pdp-gallery__thumb--active {
+  border-color: var(--pdp-accent) !important;
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+}
+
+/* ── Product Info ────────────────────────────────────── */
+.pdp-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pdp-breadcrumb {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted-foreground);
+  margin-bottom: 8px;
+}
+
+.pdp-info__brand {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--pdp-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+}
+
+.pdp-info__title {
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+}
+
+.pdp-info__rating-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.pdp-stars {
+  display: flex;
+  gap: 2px;
+}
+
+.pdp-star--full { color: #fbbf24; fill: #fbbf24; }
+.pdp-star--empty { color: var(--border); }
+
+.pdp-info__rating-val { font-weight: 700; font-size: 15px; }
+.pdp-info__review-link { color: var(--muted-foreground); font-size: 14px; text-decoration: underline; text-underline-offset: 4px; }
+
+/* ── Pricing ─────────────────────────────────────────── */
+.pdp-pricing {
+  margin: 24px 0;
+  padding: 24px;
+  background: var(--muted);
+  border-radius: var(--pdp-radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pdp-pricing__row {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.pdp-pricing__price {
+  font-size: 44px;
+  font-weight: 900;
+  color: var(--foreground);
+  letter-spacing: -0.04em;
+}
+
+.pdp-pricing__badge {
+  background: var(--pdp-danger);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.pdp-pricing__compare {
+  font-size: 16px;
+  color: var(--muted-foreground);
+  text-decoration: line-through;
+}
+
+/* ── Variants ────────────────────────────────────────── */
+.pdp-variants {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.pdp-variants__label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--muted-foreground);
+}
+
+.pdp-variants__label strong { color: var(--foreground); }
+
+.pdp-swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background-color: var(--swatch-color);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.pdp-swatch:hover { transform: scale(1.15); }
+
+.pdp-swatch--active {
+  border-color: var(--pdp-accent);
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2);
+}
+
+.pdp-size-btn {
+  padding: 10px 20px;
+  border-radius: var(--pdp-radius-sm);
+  border: 1px solid var(--border);
+  background: var(--card);
+  font-weight: 700;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.pdp-size-btn:hover { border-color: var(--pdp-accent); color: var(--pdp-accent); }
+.pdp-size-btn--active { background: var(--pdp-accent); color: white; border-color: var(--pdp-accent); }
+
+/* ── Actions ─────────────────────────────────────────── */
+.pdp-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.pdp-actions__cart, .pdp-actions__buynow {
+  height: 60px;
+  border-radius: var(--pdp-radius-md);
+  font-size: 16px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: none;
+}
+
+.pdp-actions__cart {
+  background: var(--pdp-accent-gradient);
+  color: white;
+  box-shadow: 0 10px 30px -10px rgba(79, 70, 229, 0.5);
+}
+
+.pdp-actions__cart:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -15px rgba(79, 70, 229, 0.6);
+}
+
+.pdp-actions__buynow {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.pdp-actions__buynow:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+/* ── Sidebar Cards ───────────────────────────────────── */
+.pdp-layout__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pdp-delivery, .pdp-seller {
+  padding: 24px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--pdp-radius-md);
+  box-shadow: var(--pdp-shadow-soft);
+}
+
+/* ── Tabs & Reviews ──────────────────────────────────── */
+.pdp-tabs-wrapper {
+  margin-top: 80px;
+  border-top: 1px solid var(--border);
+  padding-top: 60px;
+}
+
+.pdp-tabs__bar {
+  display: flex;
+  gap: 40px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 40px;
+}
+
+.pdp-tabs__tab {
+  padding: 16px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--muted-foreground);
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: none;
+  border-left: none; border-right: none; border-top: none;
+}
+
+.pdp-tabs__tab--active {
+  color: var(--foreground);
+  border-bottom-color: var(--pdp-accent);
+}
+
+/* ── Responsive Refinements ─────────────────────────── */
+@media (max-width: 1023px) {
+  .pdp-page { padding-top: 80px; }
+  .pdp-layout { gap: 40px; }
+  .pdp-layout__sidebar { order: 2; }
+}
+
+/* ── Animations ──────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pdp-info > * {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+.pdp-info > *:nth-child(1) { animation-delay: 0.1s; }
+.pdp-info > *:nth-child(2) { animation-delay: 0.2s; }
+.pdp-info > *:nth-child(3) { animation-delay: 0.3s; }
+.pdp-info > *:nth-child(4) { animation-delay: 0.4s; }
