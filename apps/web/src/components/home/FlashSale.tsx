@@ -2,15 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { ProductCard } from "../ui/ProductCard";
+import type { Product } from "@/types/product";
 import { Zap } from "lucide-react";
 import { motion } from "framer-motion";
 
 // Mock data
-const flashProducts = [
-  { id: 101, title: "Wireless Noise Cancelling Headphones Pro Max", price: 199.99, comparePrice: 299.99, rating: 4.8, reviews: 12450, image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=400&auto=format&fit=crop", soldPercentage: 85 },
-  { id: 102, title: "Smart Watch Series 8 with Health Tracking", price: 249.50, comparePrice: 399.00, rating: 4.5, reviews: 8930, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=400&auto=format&fit=crop", soldPercentage: 60 },
-  { id: 103, title: "4K Ultra HD Smart TV 55-inch", price: 349.00, comparePrice: 499.00, rating: 4.2, reviews: 4500, image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?q=80&w=400&auto=format&fit=crop", soldPercentage: 92 },
-  { id: 104, title: "Portable Bluetooth Speaker Waterproof", price: 39.99, comparePrice: 79.99, rating: 4.6, reviews: 2100, image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?q=80&w=400&auto=format&fit=crop", soldPercentage: 45 },
+const flashProducts: (Product & { soldPercentage: number })[] = [
+  { id: 101, title: "Sony WH-1000XM5 Wireless Noise Cancelling Headphones", price: 199.99, comparePrice: 299.99, rating: 4.8, reviews: 12450, image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=400&auto=format&fit=crop", sellerName: "Sony Official", soldCount: 8500, freeShipping: true, soldPercentage: 85 },
+  { id: 102, title: "Apple Watch Series 9 — GPS, 41mm Midnight Aluminium", price: 249.50, comparePrice: 399.00, rating: 4.5, reviews: 8930, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=400&auto=format&fit=crop", sellerName: "Apple Store", soldCount: 5300, freeShipping: true, soldPercentage: 60 },
+  { id: 103, title: "Samsung 55-inch Crystal UHD 4K Smart TV 2024 Model", price: 349.00, comparePrice: 499.00, rating: 4.2, reviews: 4500, image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?q=80&w=400&auto=format&fit=crop", sellerName: "Samsung", soldCount: 2900, freeShipping: true, soldPercentage: 92 },
+  { id: 104, title: "JBL Charge 5 Portable Bluetooth Speaker — Waterproof", price: 39.99, comparePrice: 79.99, rating: 4.6, reviews: 2100, image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?q=80&w=400&auto=format&fit=crop", sellerName: "JBL Audio", soldCount: 1200, freeShipping: false, soldPercentage: 45 },
 ];
 
 export function FlashSale() {
