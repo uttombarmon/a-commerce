@@ -56,6 +56,28 @@ export const products = pgTable('products', {
   priceIdx: index('price_idx').on(table.price),
 }));
 
+// --- Product Variants Table ---
+export const productVariants = pgTable('product_variants', {
+  id: serial('id').primaryKey(),
+  productId: integer('product_id').references(() => products.id).notNull(),
+  name: varchar('name', { length: 255 }).notNull(), // e.g., "Red / XL"
+  price: decimal('price', { precision: 12, scale: 2 }), // Override base price
+  stock: integer('stock').default(0).notNull(),
+  sku: varchar('sku', { length: 100 }).unique(),
+  barcode: varchar('barcode', { length: 100 }),
+  weight: decimal('weight', { precision: 10, scale: 2 }),
+  dimensions: jsonb('dimensions'), // { length, width, height }
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+// --- Variant Options Table ---
+export const variantOptions = pgTable('variant_options', {
+  id: serial('id').primaryKey(),
+  productId: integer('product_id').references(() => products.id).notNull(),
+  type: varchar('type', { length: 100 }).notNull(), // e.g., "Color", "Size"
+  values: jsonb('values').notNull(), // Array of strings: ["Red", "Blue"]
+});
+
 // --- Cart Table ---
 export const cart = pgTable('cart', {
   id: serial('id').primaryKey(),
@@ -145,8 +167,24 @@ export const productsRelations = relations(products, ({ one, many }) => ({
     fields: [products.categoryId],
     references: [categories.id],
   }),
+  variants: many(productVariants),
+  options: many(variantOptions),
   reviews: many(reviews),
   orderItems: many(orderItems),
+}));
+
+export const productVariantsRelations = relations(productVariants, ({ one }) => ({
+  product: one(products, {
+    fields: [productVariants.productId],
+    references: [products.id],
+  }),
+}));
+
+export const variantOptionsRelations = relations(variantOptions, ({ one }) => ({
+  product: one(products, {
+    fields: [variantOptions.productId],
+    references: [products.id],
+  }),
 }));
 
 export const cartRelations = relations(cart, ({ one, many }) => ({

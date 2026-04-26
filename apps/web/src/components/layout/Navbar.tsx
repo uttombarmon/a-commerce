@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCart } from "@/context/CartContext";
+import { SearchAutocomplete } from "@/components/search/SearchAutocomplete";
 
 export function Navbar() {
   const { itemCount } = useCart();
@@ -55,23 +56,9 @@ export function Navbar() {
           {/* Right Actions */}
           <div className="flex items-center space-x-2 md:space-x-4">
             {/* Search Pill */}
-            <form 
-              onSubmit={(e) => {
-                e.preventDefault();
-                const q = (e.target as any).search.value;
-                if (q) router.push(`/search?q=${encodeURIComponent(q)}`);
-              }}
-              className="hidden md:flex items-center bg-muted/50 hover:bg-muted border border-border rounded-full px-4 py-1.5 transition-colors group focus-within:ring-2 focus-within:ring-brand focus-within:bg-surface"
-            >
-              <Search size={16} className="text-muted-foreground group-focus-within:text-brand" />
-              <input
-                name="search"
-                type="text"
-                placeholder="Search products..."
-                defaultValue={searchParams.get("q") || ""}
-                className="bg-transparent border-none outline-none text-sm w-48 ml-2 text-foreground placeholder:text-muted-foreground"
-              />
-            </form>
+            <div className="hidden md:flex flex-1 max-w-md mx-8">
+              <SearchAutocomplete />
+            </div>
             <button className="md:hidden p-2 text-foreground hover:bg-muted rounded-full transition-colors">
               <Search size={20} />
             </button>

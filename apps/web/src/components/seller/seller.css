@@ -1,0 +1,249 @@
+/* ═══════════════════════════════════════════════════════
+   SELLER DASHBOARD & FORM STYLES
+   ═══════════════════════════════════════════════════════ */
+
+.seller-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 120px 24px 80px;
+}
+
+.seller-header {
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.seller-title {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* ── Progress Indicator ──────────────────────────────── */
+.progress-steps {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 48px;
+  position: relative;
+}
+
+.progress-steps::before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--border);
+  z-index: 0;
+}
+
+.step-item {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 120px;
+}
+
+.step-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--muted-foreground);
+  transition: all 0.3s;
+}
+
+.step-item--active .step-dot {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: white;
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+}
+
+.step-item--completed .step-dot {
+  background: #10b981;
+  border-color: #10b981;
+  color: white;
+}
+
+.step-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted-foreground);
+  text-align: center;
+}
+
+.step-item--active .step-label {
+  color: var(--foreground);
+}
+
+/* ── Form Layout ─────────────────────────────────────── */
+.form-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-field--full {
+  grid-column: span 2;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.form-input, .form-textarea, .form-select {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--muted-overlay, rgba(243, 244, 246, 0.5));
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.form-input:focus, .form-textarea:focus {
+  background: var(--surface);
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  outline: none;
+}
+
+/* ── Image Upload ────────────────────────────────────── */
+.upload-zone {
+  border: 2px dashed var(--border);
+  border-radius: 20px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.upload-zone:hover {
+  border-color: var(--brand);
+  background: rgba(79, 70, 229, 0.02);
+}
+
+.image-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.image-preview {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid var(--border);
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-preview__remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* ── Variants ────────────────────────────────────────── */
+.variant-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  background: var(--muted);
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.variant-matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 24px;
+}
+
+.variant-matrix-table th {
+  text-align: left;
+  padding: 12px;
+  font-size: 12px;
+  color: var(--muted-foreground);
+  border-bottom: 1px solid var(--border);
+}
+
+.variant-matrix-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── Navigation ──────────────────────────────────────── */
+.form-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+
+.btn-secondary {
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-primary {
+  padding: 12px 32px;
+  border-radius: 12px;
+  background: var(--pdp-accent-gradient, #4f46e5);
+  color: white;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
+}

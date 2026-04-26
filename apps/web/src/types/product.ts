@@ -3,17 +3,19 @@
 export interface Product {
   id: string | number;
   title: string;
+  slug?: string;
+  description?: string;
   price: number;
   /** Original/crossed-out price before discount */
   comparePrice?: number;
   image: string;
+  images?: string[];
   rating: number;
   reviews: number;
   /** Seller or brand name */
   sellerName?: string;
   /** Number of units sold */
   soldCount?: number;
-  /** Show free-shipping badge */
   brand?: string;
   category?: string;
   location?: string;
