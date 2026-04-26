@@ -4,8 +4,13 @@ import { Search, ShoppingBag, User, Menu } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCart } from "@/context/CartContext";
 
 export function Navbar() {
+  const { itemCount } = useCart();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [isScrolled, setIsScrolled] = useState(false);
   const { scrollY } = useScroll();
 
@@ -50,14 +55,23 @@ export function Navbar() {
           {/* Right Actions */}
           <div className="flex items-center space-x-2 md:space-x-4">
             {/* Search Pill */}
-            <div className="hidden md:flex items-center bg-muted/50 hover:bg-muted border border-border rounded-full px-4 py-1.5 transition-colors group focus-within:ring-2 focus-within:ring-brand focus-within:bg-surface">
+            <form 
+              onSubmit={(e) => {
+                e.preventDefault();
+                const q = (e.target as any).search.value;
+                if (q) router.push(`/search?q=${encodeURIComponent(q)}`);
+              }}
+              className="hidden md:flex items-center bg-muted/50 hover:bg-muted border border-border rounded-full px-4 py-1.5 transition-colors group focus-within:ring-2 focus-within:ring-brand focus-within:bg-surface"
+            >
               <Search size={16} className="text-muted-foreground group-focus-within:text-brand" />
               <input
+                name="search"
                 type="text"
                 placeholder="Search products..."
+                defaultValue={searchParams.get("q") || ""}
                 className="bg-transparent border-none outline-none text-sm w-48 ml-2 text-foreground placeholder:text-muted-foreground"
               />
-            </div>
+            </form>
             <button className="md:hidden p-2 text-foreground hover:bg-muted rounded-full transition-colors">
               <Search size={20} />
             </button>
@@ -70,9 +84,11 @@ export function Navbar() {
             {/* Cart */}
             <Link href="/cart" className="relative p-2 text-foreground hover:bg-muted rounded-full transition-colors flex items-center justify-center bg-primary text-primary-foreground">
               <ShoppingBag size={20} />
-              <span className="absolute -top-1 -right-1 bg-brand text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border-2 border-surface">
-                0
-              </span>
+              {itemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-brand text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border-2 border-surface">
+                  {itemCount}
+                </span>
+              )}
             </Link>
           </div>
         </div>

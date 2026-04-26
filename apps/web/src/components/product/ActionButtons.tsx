@@ -2,13 +2,16 @@
 
 import { useState, useCallback } from "react";
 import { ShoppingCart, Zap, Heart, GitCompare } from "lucide-react";
+import { useCart } from "@/context/CartContext";
+import type { Product } from "@/types/product";
 
 interface ActionButtonsProps {
-  outOfStock?: boolean;
-  productId: string | number;
+  product: Product;
 }
 
-export function ActionButtons({ outOfStock = false, productId }: ActionButtonsProps) {
+export function ActionButtons({ product }: ActionButtonsProps) {
+  const { addItem } = useCart();
+  const outOfStock = product.outOfStock;
   const [cartState, setCartState] = useState<"idle" | "loading" | "added">("idle");
   const [wishlisted, setWishlisted] = useState(false);
 
@@ -17,9 +20,10 @@ export function ActionButtons({ outOfStock = false, productId }: ActionButtonsPr
     setCartState("loading");
     // Simulate network call
     await new Promise((r) => setTimeout(r, 800));
+    addItem(product);
     setCartState("added");
     setTimeout(() => setCartState("idle"), 2500);
-  }, [outOfStock]);
+  }, [outOfStock, product, addItem]);
 
   const handleBuyNow = useCallback(() => {
     if (outOfStock) return;
@@ -31,7 +35,7 @@ export function ActionButtons({ outOfStock = false, productId }: ActionButtonsPr
     <div className="pdp-actions">
       {/* Add to Cart */}
       <button
-        id={`pdp-add-to-cart-${productId}`}
+        id={`pdp-add-to-cart-${product.id}`}
         onClick={handleAddToCart}
         disabled={outOfStock || cartState === "loading"}
         className={`pdp-actions__cart
@@ -64,7 +68,7 @@ export function ActionButtons({ outOfStock = false, productId }: ActionButtonsPr
 
       {/* Buy Now */}
       <button
-        id={`pdp-buy-now-${productId}`}
+        id={`pdp-buy-now-${product.id}`}
         onClick={handleBuyNow}
         disabled={outOfStock}
         className="pdp-actions__buynow"
@@ -77,7 +81,7 @@ export function ActionButtons({ outOfStock = false, productId }: ActionButtonsPr
       {/* Wishlist + Compare row */}
       <div className="pdp-actions__secondary">
         <button
-          id={`pdp-wishlist-${productId}`}
+          id={`pdp-wishlist-${product.id}`}
           onClick={() => setWishlisted((w) => !w)}
           className={`pdp-actions__wishlist ${wishlisted ? "pdp-actions__wishlist--active" : ""}`}
           aria-pressed={wishlisted}

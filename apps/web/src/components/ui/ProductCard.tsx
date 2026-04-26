@@ -12,6 +12,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import type { ProductCardProps } from "@/types/product";
+import { useCart } from "@/context/CartContext";
 
 // ─── Helper: Star Rating ──────────────────────────────────────────────────────
 
@@ -73,6 +74,7 @@ export function ProductCard({
   onAddToCart,
   onQuickView,
 }: ProductCardProps) {
+  const { addItem } = useCart();
   const [wishlisted, setWishlisted] = useState(false);
   const [cartAdded, setCartAdded] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
@@ -82,10 +84,11 @@ export function ProductCard({
       e.preventDefault();
       if (outOfStock) return;
       setCartAdded(true);
+      addItem({ id, title, price, comparePrice, image, rating, reviews, sellerName, soldCount, freeShipping, outOfStock });
       onAddToCart?.(id);
       setTimeout(() => setCartAdded(false), 1800);
     },
-    [id, outOfStock, onAddToCart]
+    [id, title, price, comparePrice, image, rating, reviews, sellerName, soldCount, freeShipping, outOfStock, addItem, onAddToCart]
   );
 
   const handleWishlist = useCallback(

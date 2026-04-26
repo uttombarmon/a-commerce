@@ -14,11 +14,28 @@ export interface Product {
   /** Number of units sold */
   soldCount?: number;
   /** Show free-shipping badge */
+  brand?: string;
+  category?: string;
+  location?: string;
+  /** Show free-shipping badge */
   freeShipping?: boolean;
   /** Mark as out of stock */
   outOfStock?: boolean;
   /** soldPercentage for flash sales */
   soldPercentage?: number;
+}
+
+export interface SearchParams {
+  q?: string;
+  category?: string;
+  brand?: string[];
+  minPrice?: number;
+  maxPrice?: number;
+  rating?: number;
+  shipping?: string;
+  sort?: string;
+  page?: number;
+  view?: "grid" | "list";
 }
 
 export interface ProductCardProps extends Product {

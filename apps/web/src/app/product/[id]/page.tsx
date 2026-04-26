@@ -68,8 +68,7 @@ export default async function ProductPage({
           />
 
           <ActionButtons
-            outOfStock={product.outOfStock}
-            productId={product.id}
+            product={product}
           />
         </div>
 
