@@ -1,119 +1,147 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronDown, ChevronUp, Star } from "lucide-react";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useCallback } from "react";
+import { SlidersHorizontal } from "lucide-react";
 
-interface FilterGroupProps {
-  title: string;
-  children: React.ReactNode;
-  defaultExpanded?: boolean;
+interface FilterSidebarProps {
+  categories: string[];
+  brands: string[];
 }
 
-function FilterGroup({ title, children, defaultExpanded = true }: FilterGroupProps) {
-  const [expanded, setExpanded] = useState(defaultExpanded);
-  return (
-    <div className="filter-group">
-      <button 
-        className="filter-group__title"
-        onClick={() => setExpanded(!expanded)}
-      >
-        {title}
-        {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-      </button>
-      {expanded && <div className="filter-group__content">{children}</div>}
-    </div>
-  );
-}
-
-export function FilterSidebar() {
-  const router = useRouter();
+export function FilterSidebar({ categories, brands }: FilterSidebarProps) {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const pathname = usePathname();
 
-  const updateParam = (key: string, value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    const current = params.get(key);
+  const selectedCategories = searchParams.get("categories")?.split(",") || [];
+  const selectedBrands = searchParams.get("brands")?.split(",") || [];
+  const minPrice = searchParams.get("minPrice") || "";
+  const maxPrice = searchParams.get("maxPrice") || "";
+
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (value) {
+        params.set(name, value);
+      } else {
+        params.delete(name);
+      }
+      return params.toString();
+    },
+    [searchParams]
+  );
+
+  const toggleFilter = (type: "categories" | "brands", value: string) => {
+    const current = type === "categories" ? selectedCategories : selectedBrands;
+    const isSelected = current.includes(value);
     
-    if (current === value) {
-      params.delete(key);
+    let newValues;
+    if (isSelected) {
+      newValues = current.filter(item => item !== value);
     } else {
-      params.set(key, value);
+      newValues = [...current, value];
     }
+    
+    router.push(`${pathname}?${createQueryString(type, newValues.join(","))}`);
+  };
+
+  const applyPrice = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const min = formData.get("min") as string;
+    const max = formData.get("max") as string;
+    
+    const params = new URLSearchParams(searchParams.toString());
+    if (min) params.set("minPrice", min); else params.delete("minPrice");
+    if (max) params.set("maxPrice", max); else params.delete("maxPrice");
     
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  const isSelected = (key: string, value: string) => searchParams.get(key) === value;
-
   return (
-    <aside className="plp-sidebar">
-      {/* Category Tree */}
-      <FilterGroup title="Department">
-        <ul className="filter-list">
-          <li 
-            className={`filter-item ${isSelected("category", "electronics") ? "font-bold text-pdp-accent" : ""}`}
-            onClick={() => updateParam("category", "electronics")}
-          >
-            Electronics
-          </li>
-          <li className="filter-item pl-4">Headphones</li>
-        </ul>
-      </FilterGroup>
+    <div className="bg-white rounded-2xl border border-border p-6 shadow-sm">
+      <div className="flex items-center gap-2 font-bold text-lg mb-6 pb-4 border-b border-border">
+        <SlidersHorizontal size={20} />
+        Filters
+      </div>
 
-      {/* Rating */}
-      <FilterGroup title="Customer Reviews">
-        <div className="filter-list">
-          {[4, 3, 2, 1].map((stars) => (
-            <label key={stars} className="filter-item" onClick={() => updateParam("rating", stars.toString())}>
-              <input type="checkbox" checked={isSelected("rating", stars.toString())} readOnly />
-              <div className="flex gap-1 text-amber-500">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} size={12} fill={i < stars ? "currentColor" : "none"} />
-                ))}
-              </div>
-              <span>& Up</span>
-            </label>
-          ))}
+      <div className="space-y-8">
+        {/* Price Filter */}
+        <div>
+          <h3 className="font-bold mb-4">Price Range</h3>
+          <form onSubmit={applyPrice} className="flex items-center gap-2">
+            <input 
+              name="min"
+              type="number" 
+              defaultValue={minPrice}
+              placeholder="Min" 
+              className="w-full p-2 border border-border rounded-lg text-sm outline-none focus:border-brand"
+            />
+            <span className="text-muted-foreground">-</span>
+            <input 
+              name="max"
+              type="number" 
+              defaultValue={maxPrice}
+              placeholder="Max" 
+              className="w-full p-2 border border-border rounded-lg text-sm outline-none focus:border-brand"
+            />
+            <button type="submit" className="p-2 bg-brand text-white rounded-lg font-bold text-sm">
+              Go
+            </button>
+          </form>
         </div>
-      </FilterGroup>
 
-      {/* Brand */}
-      <FilterGroup title="Brand">
-        <div className="filter-list">
-          {["Sony", "Bose", "Sennheiser", "Apple", "Jabra"].map((brand) => (
-            <label key={brand} className="filter-item" onClick={() => updateParam("brand", brand.toLowerCase())}>
-              <input type="checkbox" checked={isSelected("brand", brand.toLowerCase())} readOnly />
-              <span>{brand}</span>
-              <span className="filter-item__count">({Math.floor(Math.random() * 100)})</span>
-            </label>
-          ))}
-        </div>
-      </FilterGroup>
+        {/* Categories */}
+        {categories.length > 0 && (
+          <div>
+            <h3 className="font-bold mb-4">Categories</h3>
+            <div className="space-y-3 max-h-48 overflow-y-auto pr-2">
+              {categories.map(category => (
+                <label key={category} className="flex items-center gap-3 cursor-pointer group">
+                  <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${
+                    selectedCategories.includes(category) ? "bg-brand border-brand text-white" : "border-border group-hover:border-brand/50"
+                  }`}>
+                    {selectedCategories.includes(category) && <div className="w-2.5 h-2.5 bg-white rounded-sm" />}
+                  </div>
+                  <span className="text-sm">{category}</span>
+                  <input 
+                    type="checkbox" 
+                    className="hidden" 
+                    checked={selectedCategories.includes(category)}
+                    onChange={() => toggleFilter("categories", category)} 
+                  />
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
 
-      {/* Price */}
-      <FilterGroup title="Price">
-        <div className="price-inputs">
-          <input type="number" placeholder="Min" className="price-input" />
-          <span className="text-muted-foreground text-xs">to</span>
-          <input type="number" placeholder="Max" className="price-input" />
-          <button className="page-btn !w-auto !h-auto py-2 px-3">Go</button>
-        </div>
-      </FilterGroup>
-
-      {/* Shipping */}
-      <FilterGroup title="Shipping & Offers">
-        <div className="filter-list">
-          <label className="filter-item">
-            <input type="checkbox" />
-            <span>Free Delivery</span>
-          </label>
-          <label className="filter-item">
-            <input type="checkbox" />
-            <span>Discounted</span>
-          </label>
-        </div>
-      </FilterGroup>
-    </aside>
+        {/* Brands */}
+        {brands.length > 0 && (
+          <div>
+            <h3 className="font-bold mb-4">Brands</h3>
+            <div className="space-y-3 max-h-48 overflow-y-auto pr-2">
+              {brands.map(brand => (
+                <label key={brand} className="flex items-center gap-3 cursor-pointer group">
+                  <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${
+                    selectedBrands.includes(brand) ? "bg-brand border-brand text-white" : "border-border group-hover:border-brand/50"
+                  }`}>
+                    {selectedBrands.includes(brand) && <div className="w-2.5 h-2.5 bg-white rounded-sm" />}
+                  </div>
+                  <span className="text-sm">{brand}</span>
+                  <input 
+                    type="checkbox" 
+                    className="hidden" 
+                    checked={selectedBrands.includes(brand)}
+                    onChange={() => toggleFilter("brands", brand)} 
+                  />
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

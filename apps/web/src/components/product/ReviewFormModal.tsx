@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Star, Upload, Image as ImageIcon } from "lucide-react";
+import { X, Star, Upload, Image as ImageIcon, Camera } from "lucide-react";
 import Image from "next/image";
 
 export function ReviewFormModal({ 

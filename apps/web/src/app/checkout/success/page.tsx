@@ -6,7 +6,7 @@ import Link from "next/link";
 import { CheckCircle, Package, Truck, ArrowRight } from "lucide-react";
 import confetti from "canvas-confetti";
 
-export default function CheckoutSuccessPage() {
+function SuccessContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId");
   const [mounted, setMounted] = useState(false);
@@ -100,5 +100,15 @@ export default function CheckoutSuccessPage() {
         </Link>
       </div>
     </div>
+  );
+}
+
+import { Suspense } from "react";
+
+export default function CheckoutSuccessPage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center p-24 text-brand font-bold">Loading...</div>}>
+      <SuccessContent />
+    </Suspense>
   );
 }

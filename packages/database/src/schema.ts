@@ -6,10 +6,15 @@ export const users = pgTable('users', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 255 }).notNull(),
   email: varchar('email', { length: 255 }).notNull().unique(),
-  passwordHash: text('password_hash').notNull(),
+  passwordHash: text('password_hash'), // Nullable for OAuth-only users
   role: varchar('role', { length: 50 }).default('customer').notNull(), // admin, customer, vendor, seller
   address: text('address'),
   avatar: text('avatar'),
+  emailVerified: timestamp('email_verified'),
+  twoFactorEnabled: boolean('two_factor_enabled').default(false).notNull(),
+  twoFactorSecret: text('two_factor_secret'),
+  failedLoginAttempts: integer('failed_login_attempts').default(0).notNull(),
+  lockedUntil: timestamp('locked_until'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 }, (table) => ({
@@ -162,6 +167,39 @@ export const abandonedCartLogs = pgTable('abandoned_cart_logs', {
   recovered: boolean('recovered').default(false).notNull(),
 });
 
+// --- OAuth Accounts Table ---
+export const oauthAccounts = pgTable('oauth_accounts', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').references(() => users.id).notNull(),
+  provider: varchar('provider', { length: 50 }).notNull(), // google, facebook
+  providerAccountId: varchar('provider_account_id', { length: 255 }).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (table) => ({
+  providerIdx: index('provider_idx').on(table.provider, table.providerAccountId),
+}));
+
+// --- Sessions Table ---
+export const sessions = pgTable('sessions', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').references(() => users.id).notNull(),
+  refreshToken: text('refresh_token').notNull().unique(),
+  userAgent: text('user_agent'),
+  ipAddress: varchar('ip_address', { length: 45 }),
+  expiresAt: timestamp('expires_at').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+// --- Verification Tokens Table ---
+export const verificationTokens = pgTable('verification_tokens', {
+  identifier: varchar('identifier', { length: 255 }).notNull(), // usually email
+  token: text('token').notNull().unique(),
+  type: varchar('type', { length: 50 }).notNull(), // 'email_verification', 'password_reset'
+  expiresAt: timestamp('expires_at').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (table) => ({
+  identifierIdx: index('identifier_idx').on(table.identifier, table.token),
+}));
+
 // --- Orders Table ---
 export const orders = pgTable('orders', {
   id: serial('id').primaryKey(),
@@ -231,8 +269,11 @@ export const usersRelations = relations(users, ({ one, many }) => ({
     references: [cart.userId],
   }),
   wishlists: many(wishlists),
+  wishlists: many(wishlists),
   productAlerts: many(productAlerts),
   addresses: many(addresses),
+  oauthAccounts: many(oauthAccounts),
+  sessions: many(sessions),
 }));
 
 export const addressesRelations = relations(addresses, ({ one }) => ({
@@ -370,5 +411,19 @@ export const orderItemsRelations = relations(orderItems, ({ one }) => ({
   product: one(products, {
     fields: [orderItems.productId],
     references: [products.id],
+  }),
+}));
+
+export const oauthAccountsRelations = relations(oauthAccounts, ({ one }) => ({
+  user: one(users, {
+    fields: [oauthAccounts.userId],
+    references: [users.id],
+  }),
+}));
+
+export const sessionsRelations = relations(sessions, ({ one }) => ({
+  user: one(users, {
+    fields: [sessions.userId],
+    references: [users.id],
   }),
 }));

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Star, MessageSquare, Search, Filter } from "lucide-react";
-import "../../components/seller/seller.css";
+import "@/components/seller/seller.css";
 
 // Mock Data
 const MOCK_REVIEWS = [

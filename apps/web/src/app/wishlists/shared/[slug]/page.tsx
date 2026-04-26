@@ -5,32 +5,37 @@ import { WishlistItemCard } from "@/components/wishlist/WishlistItemCard";
 import { Heart, Lock } from "lucide-react";
 import Link from "next/link";
 
-export default function SharedWishlistPage({ params }: { params: { slug: string } }) {
+export default function SharedWishlistPage({ params }: { params: Promise<{ slug: string }> }) {
   const [list, setList] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // In a real app, fetch /api/wishlists/shared/${params.slug}
-    // Mocking the fetch for now:
-    setTimeout(() => {
-      setList({
-        name: "My Custom PC Build",
-        isPublic: true,
-        user: { name: "John Doe" },
-        items: [
-          {
-            productId: 101,
-            title: "Mock GPU 4090",
-            image: "https://via.placeholder.com/400x400?text=GPU",
-            price: 1599.99,
-            addedPrice: 1699.99,
-            maxStock: 5
-          }
-        ]
-      });
-      setLoading(false);
-    }, 1000);
-  }, [params.slug]);
+    const fetchList = async () => {
+      const { slug } = await params;
+      // In a real app, fetch /api/wishlists/shared/${slug}
+      // Mocking the fetch for now:
+      setTimeout(() => {
+        setList({
+          name: "My Custom PC Build",
+          isPublic: true,
+          user: { name: "John Doe" },
+          items: [
+            {
+              productId: 101,
+              title: "Mock GPU 4090",
+              image: "https://via.placeholder.com/400x400?text=GPU",
+              price: 1599.99,
+              addedPrice: 1699.99,
+              maxStock: 5
+            }
+          ]
+        });
+        setLoading(false);
+      }, 1000);
+    };
+
+    fetchList();
+  }, [params]);
 
   if (loading) {
     return <div className="min-h-[50vh] flex items-center justify-center animate-pulse text-brand font-bold text-xl">Loading list...</div>;

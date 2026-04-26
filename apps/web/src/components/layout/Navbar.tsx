@@ -2,9 +2,9 @@
 
 import { Search, ShoppingBag, User, Menu } from "lucide-react";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { SearchAutocomplete } from "@/components/search/SearchAutocomplete";
@@ -15,7 +15,6 @@ export function Navbar() {
   const { itemCount } = useCart();
   const wishlistItemsCount = useWishlistStore(state => state.lists.reduce((acc, list) => acc + list.items.length, 0));
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [isScrolled, setIsScrolled] = useState(false);
   const { scrollY } = useScroll();
 
@@ -61,7 +60,9 @@ export function Navbar() {
           <div className="flex items-center space-x-2 md:space-x-4">
             {/* Search Pill */}
             <div className="hidden md:flex flex-1 max-w-md mx-8">
-              <SearchAutocomplete />
+              <Suspense fallback={<div className="w-full h-10 bg-muted animate-pulse rounded-full" />}>
+                <SearchAutocomplete />
+              </Suspense>
             </div>
             <button className="md:hidden p-2 text-foreground hover:bg-muted rounded-full transition-colors">
               <Search size={20} />

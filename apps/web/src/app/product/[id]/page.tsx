@@ -68,7 +68,7 @@ export default async function ProductPage({
           />
 
           <ActionButtons
-            product={product}
+            product={product as any}
           />
         </div>
 
