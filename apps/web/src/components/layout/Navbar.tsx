@@ -7,6 +7,7 @@ import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { SearchAutocomplete } from "@/components/search/SearchAutocomplete";
+import { MiniCartPopover } from "@/components/cart/MiniCartPopover";
 
 export function Navbar() {
   const { itemCount } = useCart();
@@ -69,14 +70,7 @@ export function Navbar() {
             </button>
 
             {/* Cart */}
-            <Link href="/cart" className="relative p-2 text-foreground hover:bg-muted rounded-full transition-colors flex items-center justify-center bg-primary text-primary-foreground">
-              <ShoppingBag size={20} />
-              {itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-brand text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border-2 border-surface">
-                  {itemCount}
-                </span>
-              )}
-            </Link>
+            <MiniCartPopover />
           </div>
         </div>
       </div>

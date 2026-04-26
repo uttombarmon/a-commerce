@@ -16,6 +16,21 @@ export const users = pgTable('users', {
   emailIdx: index('email_idx').on(table.email),
 }));
 
+// --- Addresses Table ---
+export const addresses = pgTable('addresses', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').references(() => users.id).notNull(),
+  fullName: varchar('full_name', { length: 255 }).notNull(),
+  phone: varchar('phone', { length: 50 }),
+  street: varchar('street', { length: 255 }).notNull(),
+  city: varchar('city', { length: 100 }).notNull(),
+  state: varchar('state', { length: 100 }).notNull(),
+  zip: varchar('zip', { length: 20 }).notNull(),
+  country: varchar('country', { length: 100 }).notNull(),
+  isDefault: boolean('is_default').default(false).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
 // --- Sellers Table ---
 export const sellers = pgTable('sellers', {
   id: serial('id').primaryKey(),
@@ -92,7 +107,9 @@ export const variantOptions = pgTable('variant_options', {
 export const cart = pgTable('cart', {
   id: serial('id').primaryKey(),
   userId: integer('user_id').references(() => users.id).notNull(),
+  status: varchar('status', { length: 50 }).default('active').notNull(), // active, abandoned, converted
   createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
 // --- Cart Items Table ---
@@ -100,18 +117,42 @@ export const cartItems = pgTable('cart_items', {
   id: serial('id').primaryKey(),
   cartId: integer('cart_id').references(() => cart.id).notNull(),
   productId: integer('product_id').references(() => products.id).notNull(),
+  variantId: integer('variant_id').references(() => productVariants.id),
   quantity: integer('quantity').notNull().default(1),
   createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+// --- Wishlist Items Table ---
+export const wishlistItems = pgTable('wishlist_items', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').references(() => users.id).notNull(),
+  productId: integer('product_id').references(() => products.id).notNull(),
+  variantId: integer('variant_id').references(() => productVariants.id),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+// --- Abandoned Cart Logs Table ---
+export const abandonedCartLogs = pgTable('abandoned_cart_logs', {
+  id: serial('id').primaryKey(),
+  cartId: integer('cart_id').references(() => cart.id).notNull(),
+  emailSentAt: timestamp('email_sent_at').defaultNow().notNull(),
+  recovered: boolean('recovered').default(false).notNull(),
 });
 
 // --- Orders Table ---
 export const orders = pgTable('orders', {
   id: serial('id').primaryKey(),
   userId: integer('user_id').references(() => users.id).notNull(),
+  subtotal: decimal('subtotal', { precision: 12, scale: 2 }).notNull(),
+  tax: decimal('tax', { precision: 12, scale: 2 }).notNull().default('0'),
+  shippingFee: decimal('shipping_fee', { precision: 12, scale: 2 }).notNull().default('0'),
   total: decimal('total', { precision: 12, scale: 2 }).notNull(),
   status: varchar('status', { length: 50 }).default('pending').notNull(), // pending, processing, shipped, delivered, cancelled
   paymentStatus: varchar('payment_status', { length: 50 }).default('unpaid').notNull(), // unpaid, paid, failed, refunded
-  shippingAddress: text('shipping_address').notNull(),
+  paymentMethod: varchar('payment_method', { length: 50 }), // credit_card, bkash, nagad, cod, sslcommerz
+  shippingMethod: varchar('shipping_method', { length: 50 }), // standard, express, same_day
+  shippingAddress: jsonb('shipping_address').notNull(), // Snapshot of address
+  deliveryDate: timestamp('delivery_date'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
@@ -166,6 +207,15 @@ export const usersRelations = relations(users, ({ one, many }) => ({
     fields: [users.id],
     references: [cart.userId],
   }),
+  wishlistItems: many(wishlistItems),
+  addresses: many(addresses),
+}));
+
+export const addressesRelations = relations(addresses, ({ one }) => ({
+  user: one(users, {
+    fields: [addresses.userId],
+    references: [users.id],
+  }),
 }));
 
 export const sellersRelations = relations(sellers, ({ one, many }) => ({
@@ -189,6 +239,7 @@ export const productsRelations = relations(products, ({ one, many }) => ({
   options: many(variantOptions),
   reviews: many(reviews),
   orderItems: many(orderItems),
+  wishlistItems: many(wishlistItems),
 }));
 
 export const productVariantsRelations = relations(productVariants, ({ one }) => ({
@@ -196,6 +247,8 @@ export const productVariantsRelations = relations(productVariants, ({ one }) => 
     fields: [productVariants.productId],
     references: [products.id],
   }),
+  cartItems: many(cartItems),
+  wishlistItems: many(wishlistItems),
 }));
 
 export const variantOptionsRelations = relations(variantOptions, ({ one }) => ({
@@ -211,6 +264,17 @@ export const cartRelations = relations(cart, ({ one, many }) => ({
     references: [users.id],
   }),
   items: many(cartItems),
+  abandonedLog: one(abandonedCartLogs, {
+    fields: [cart.id],
+    references: [abandonedCartLogs.cartId],
+  })
+}));
+
+export const abandonedCartLogsRelations = relations(abandonedCartLogs, ({ one }) => ({
+  cart: one(cart, {
+    fields: [abandonedCartLogs.cartId],
+    references: [cart.id],
+  })
 }));
 
 export const cartItemsRelations = relations(cartItems, ({ one }) => ({
@@ -221,6 +285,25 @@ export const cartItemsRelations = relations(cartItems, ({ one }) => ({
   product: one(products, {
     fields: [cartItems.productId],
     references: [products.id],
+  }),
+  variant: one(productVariants, {
+    fields: [cartItems.variantId],
+    references: [productVariants.id],
+  }),
+}));
+
+export const wishlistItemsRelations = relations(wishlistItems, ({ one }) => ({
+  user: one(users, {
+    fields: [wishlistItems.userId],
+    references: [users.id],
+  }),
+  product: one(products, {
+    fields: [wishlistItems.productId],
+    references: [products.id],
+  }),
+  variant: one(productVariants, {
+    fields: [wishlistItems.variantId],
+    references: [productVariants.id],
   }),
 }));
 
