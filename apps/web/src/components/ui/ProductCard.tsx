@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import type { ProductCardProps } from "@/types/product";
 import { useCart } from "@/context/CartContext";
+import { useWishlistStore } from "@/store/wishlistStore";
 
 // ─── Helper: Star Rating ──────────────────────────────────────────────────────
 
@@ -75,7 +76,8 @@ export function ProductCard({
   onQuickView,
 }: ProductCardProps) {
   const { addItem } = useCart();
-  const [wishlisted, setWishlisted] = useState(false);
+  const { toggleItem, isInList, activeListId } = useWishlistStore();
+  const wishlisted = isInList(activeListId || 'default', id);
   const [cartAdded, setCartAdded] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
 
@@ -94,9 +96,16 @@ export function ProductCard({
   const handleWishlist = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
-      setWishlisted((prev) => !prev);
+      toggleItem(activeListId || 'default', {
+        productId: id,
+        title,
+        price,
+        image,
+        maxStock: outOfStock ? 0 : 100,
+        addedPrice: price
+      });
     },
-    []
+    [id, title, price, image, outOfStock, activeListId, toggleItem]
   );
 
   const handleQuickView = useCallback(

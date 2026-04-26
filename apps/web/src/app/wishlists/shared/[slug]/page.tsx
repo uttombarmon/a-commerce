@@ -1,71 +1,118 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { WishlistItemCard } from "@/components/wishlist/WishlistItemCard";
-import { Heart, Lock } from "lucide-react";
+import { useState, useEffect, use } from "react";
+import Image from "next/image";
+import { Heart, ShoppingCart, Share2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { useCartStore } from "@/store/cartStore";
 
 export default function SharedWishlistPage({ params }: { params: Promise<{ slug: string }> }) {
-  const [list, setList] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { slug } = use(params);
+  const [mounted, setMounted] = useState(false);
+  const addToCart = useCartStore(state => state.addItem);
+  const toggleCart = useCartStore(state => state.toggleCart);
 
-  useEffect(() => {
-    const fetchList = async () => {
-      const { slug } = await params;
-      // In a real app, fetch /api/wishlists/shared/${slug}
-      // Mocking the fetch for now:
-      setTimeout(() => {
-        setList({
-          name: "My Custom PC Build",
-          isPublic: true,
-          user: { name: "John Doe" },
-          items: [
-            {
-              productId: 101,
-              title: "Mock GPU 4090",
-              image: "https://via.placeholder.com/400x400?text=GPU",
-              price: 1599.99,
-              addedPrice: 1699.99,
-              maxStock: 5
-            }
-          ]
-        });
-        setLoading(false);
-      }, 1000);
-    };
+  // Mock data for a shared list (in a real app, fetch from DB via slug)
+  const [listData, setListData] = useState({
+    name: "Summer Essentials",
+    owner: "Jane Doe",
+    items: [
+      { productId: 201, title: "Echo Dot (5th Gen) Smart Speaker", price: 49.99, image: "https://images.unsplash.com/photo-1543512214-318c7553f230?q=80&w=400" },
+      { productId: 202, title: "Kindle Paperwhite (8 GB)", price: 139.99, image: "https://images.unsplash.com/photo-1592496001020-d3124286f52e?q=80&w=400" },
+      { productId: 205, title: "Ring Video Doorbell", price: 99.99, image: "https://images.unsplash.com/photo-1558002038-1055907df827?q=80&w=400" },
+    ]
+  });
 
-    fetchList();
-  }, [params]);
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
 
-  if (loading) {
-    return <div className="min-h-[50vh] flex items-center justify-center animate-pulse text-brand font-bold text-xl">Loading list...</div>;
-  }
-
-  if (!list || !list.isPublic) {
-    return (
-      <div className="max-w-4xl mx-auto py-24 px-6 text-center">
-        <Lock size={64} className="mx-auto text-muted-foreground mb-6" />
-        <h1 className="text-3xl font-bold mb-4">This list is private or doesn't exist.</h1>
-        <p className="text-muted-foreground mb-8">The owner may have deleted this list or changed its privacy settings.</p>
-        <Link href="/" className="px-6 py-3 bg-brand text-white font-bold rounded-xl hover:opacity-90">
-          Return to Shop
-        </Link>
-      </div>
-    );
-  }
+  const handleAddAllToCart = () => {
+    listData.items.forEach(item => {
+      addToCart({
+        productId: item.productId,
+        quantity: 1,
+        title: item.title,
+        image: item.image,
+        price: item.price,
+        maxStock: 100
+      });
+    });
+    toggleCart(true);
+  };
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12">
-      <div className="mb-12 text-center">
-        <Heart className="mx-auto text-rose-500 fill-rose-500 mb-4" size={48} />
-        <h1 className="text-4xl font-bold mb-2">{list.name}</h1>
-        <p className="text-muted-foreground">Curated by <span className="font-bold text-foreground">{list.user.name}</span></p>
-      </div>
+    <div className="min-h-screen bg-muted/20">
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        <Link href="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-brand font-bold mb-8 transition-colors group">
+          <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+          Back to Store
+        </Link>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {list.items.map((item: any) => (
-           <WishlistItemCard key={`${item.productId}`} item={item} listId="shared" />
-        ))}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white rounded-[3rem] border border-border shadow-xl shadow-black/5 overflow-hidden"
+        >
+          {/* Header */}
+          <div className="p-8 md:p-12 bg-gradient-to-br from-brand/5 to-transparent border-b border-border flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <div className="flex items-center justify-center md:justify-start gap-3 text-brand font-black uppercase tracking-[0.2em] text-xs mb-3">
+                <Share2 size={14} />
+                Shared Wishlist
+              </div>
+              <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-2">{listData.name}</h1>
+              <p className="text-muted-foreground font-medium">Curated by <span className="text-foreground font-bold">{listData.owner}</span></p>
+            </div>
+            
+            <button 
+              onClick={handleAddAllToCart}
+              className="px-8 py-4 bg-brand text-white font-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-brand/20 flex items-center gap-3"
+            >
+              <ShoppingCart size={20} />
+              Add All to Cart
+            </button>
+          </div>
+
+          {/* Grid */}
+          <div className="p-8 md:p-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {listData.items.map((item, index) => (
+                <motion.div 
+                  key={item.productId}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="group"
+                >
+                  <div className="relative aspect-square rounded-[2rem] overflow-hidden border border-border bg-muted mb-4">
+                    <Image src={item.image} alt={item.title} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+                  </div>
+                  <h3 className="font-bold text-lg mb-1 line-clamp-2">{item.title}</h3>
+                  <div className="flex items-center justify-between">
+                    <span className="font-black text-xl text-brand">${item.price.toFixed(2)}</span>
+                    <button 
+                      onClick={() => {
+                        addToCart({...item, quantity: 1, maxStock: 100});
+                        toggleCart(true);
+                      }}
+                      className="p-3 bg-muted rounded-xl hover:bg-brand hover:text-white transition-all"
+                    >
+                      <ShoppingCart size={18} />
+                    </button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          <div className="p-8 bg-muted/30 border-t border-border text-center">
+            <p className="text-sm text-muted-foreground font-medium flex items-center justify-center gap-2">
+              Want to create your own wishlist? <Link href="/register" className="text-brand font-black hover:underline">Join ACommerce today</Link>
+            </p>
+          </div>
+        </motion.div>
       </div>
     </div>
   );

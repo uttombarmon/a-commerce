@@ -13,11 +13,14 @@ export async function POST(request: Request) {
 
     // 1. Mock Find User
     // const user = await db.query.users.findFirst({ where: eq(users.email, email) });
+    const isByAdmin = email.includes("admin");
+    const isBySeller = email.includes("seller");
+
     const mockUser = {
-      id: 1,
+      id: isByAdmin ? 100 : isBySeller ? 200 : 1,
       email,
-      name: "Test User",
-      role: "customer",
+      name: isByAdmin ? "Super Admin" : isBySeller ? "Premium Seller" : "Test User",
+      role: isByAdmin ? "admin" : isBySeller ? "seller" : "customer",
       passwordHash: await bcrypt.hash("password123", 12),
       failedLoginAttempts: 0,
       lockedUntil: null,
