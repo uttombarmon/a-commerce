@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { MOCK_PRODUCTS, RELATED_PRODUCTS } from "@/lib/mock-products";
-import type { Product } from "@/types/product";
+import type { ProductDetail } from "@/types/product";
 
 // Simulate database search logic
 export async function GET(request: Request) {
@@ -16,26 +16,35 @@ export async function GET(request: Request) {
     });
   }
 
-  const allProducts: Product[] = [
-    ...Object.values(MOCK_PRODUCTS),
+  // Combine full ProductDetail records with lightweight related products
+  const richProducts: ProductDetail[] = Object.values(MOCK_PRODUCTS);
+  const allItems = [
+    ...richProducts,
     ...RELATED_PRODUCTS,
   ];
 
   // 1. Product Search (Full-text simulation + Fuzzy)
-  const productMatches = allProducts.filter((p) => 
+  const productMatches = allItems.filter((p) => 
     p.title.toLowerCase().includes(q) || 
     p.category?.toLowerCase().includes(q) ||
     p.brand?.toLowerCase().includes(q)
-  ).slice(0, 5);
+  ).slice(0, 5).map(p => ({
+    id: p.id,
+    title: p.title,
+    price: p.price,
+    image: p.image,
+    brand: p.brand,
+    category: p.category,
+  }));
 
   // 2. Category Suggestions
-  const uniqueCategories = Array.from(new Set(allProducts.map(p => p.category).filter(Boolean))) as string[];
+  const uniqueCategories = Array.from(new Set(allItems.map(p => p.category).filter(Boolean))) as string[];
   const categoryMatches = uniqueCategories
     .filter(cat => cat.toLowerCase().includes(q))
     .slice(0, 3);
 
   // 3. Brand Suggestions
-  const uniqueBrands = Array.from(new Set(allProducts.map(p => p.brand).filter(Boolean))) as string[];
+  const uniqueBrands = Array.from(new Set(allItems.map(p => p.brand).filter(Boolean))) as string[];
   const brandMatches = uniqueBrands
     .filter(brand => brand.toLowerCase().includes(q))
     .slice(0, 3);

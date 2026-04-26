@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Grid, List, X } from "lucide-react";
+import { Grid, List, X, ShoppingCart } from "lucide-react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { ProductCard } from "@/components/ui/ProductCard";
 import type { Product } from "@/types/product";

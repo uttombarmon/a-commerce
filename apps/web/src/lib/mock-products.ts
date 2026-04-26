@@ -115,10 +115,6 @@ export const MOCK_PRODUCTS: Record<string, ProductDetail> = {
         date: "Oct 05, 2024",
       },
     ],
-    freeShippingThreshold: 0,
-    estimatedDelivery: "Tomorrow, Oct 24",
-    returnDays: 30,
-    emiMonthly: 29,
   },
   "102": {
     id: "102",
@@ -195,10 +191,6 @@ export const MOCK_PRODUCTS: Record<string, ProductDetail> = {
     totalReviews: 8320,
     reviewList: [],
     qa: [],
-    freeShippingThreshold: 0,
-    estimatedDelivery: "Wednesday, Oct 25",
-    returnDays: 14,
-    emiMonthly: 36,
   },
 };
 

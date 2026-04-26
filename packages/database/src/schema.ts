@@ -41,19 +41,28 @@ export const products = pgTable('products', {
   title: varchar('title', { length: 255 }).notNull(),
   slug: varchar('slug', { length: 255 }).notNull().unique(),
   description: text('description'),
+  brand: varchar('brand', { length: 255 }),
+  status: varchar('status', { length: 50 }).default('draft').notNull(),
   price: decimal('price', { precision: 12, scale: 2 }).notNull(),
   comparePrice: decimal('compare_price', { precision: 12, scale: 2 }),
+  costPrice: decimal('cost_price', { precision: 12, scale: 2 }),
   sku: varchar('sku', { length: 100 }).unique(),
+  barcode: varchar('barcode', { length: 100 }),
   stock: integer('stock').default(0).notNull(),
+  lowStockThreshold: integer('low_stock_threshold').default(5),
   sellerId: integer('seller_id').references(() => sellers.id).notNull(),
   categoryId: integer('category_id').references(() => categories.id),
   images: jsonb('images').default([]), // Array of image URLs
   isFeatured: boolean('is_featured').default(false),
+  metaTitle: varchar('meta_title', { length: 255 }),
+  metaDescription: text('meta_description'),
+  bulkPricing: jsonb('bulk_pricing'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 }, (table) => ({
   titleIdx: index('title_idx').on(table.title),
   priceIdx: index('price_idx').on(table.price),
+  statusIdx: index('status_idx').on(table.status),
 }));
 
 // --- Product Variants Table ---
@@ -63,6 +72,7 @@ export const productVariants = pgTable('product_variants', {
   name: varchar('name', { length: 255 }).notNull(), // e.g., "Red / XL"
   price: decimal('price', { precision: 12, scale: 2 }), // Override base price
   stock: integer('stock').default(0).notNull(),
+  lowStockThreshold: integer('low_stock_threshold').default(5),
   sku: varchar('sku', { length: 100 }).unique(),
   barcode: varchar('barcode', { length: 100 }),
   weight: decimal('weight', { precision: 10, scale: 2 }),

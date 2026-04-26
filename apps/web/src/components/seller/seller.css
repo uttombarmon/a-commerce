@@ -2,6 +2,217 @@
    SELLER DASHBOARD & FORM STYLES
    ═══════════════════════════════════════════════════════ */
 
+/* ── Two-column Layout ───────────────────────────────── */
+.seller-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+  padding-top: 80px; /* account for Navbar */
+}
+
+@media (max-width: 768px) {
+  .seller-layout { grid-template-columns: 1fr; }
+  .seller-sidebar { display: none; }
+}
+
+/* ── Sidebar ─────────────────────────────────────────── */
+.seller-sidebar {
+  position: sticky;
+  top: 80px;
+  height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border);
+  background: var(--card);
+  overflow-y: auto;
+  padding: 24px 16px;
+}
+
+.seller-sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 14px;
+  margin-bottom: 24px;
+  background: var(--muted);
+}
+
+.seller-sidebar__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.seller-sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.seller-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted-foreground);
+  text-decoration: none;
+  transition: all 0.2s;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.seller-nav-item:hover {
+  color: var(--foreground);
+  background: var(--muted);
+}
+
+.seller-nav-item--active {
+  color: var(--foreground);
+  background: rgba(79, 70, 229, 0.08);
+  color: #4f46e5;
+}
+
+.seller-sidebar__footer {
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  margin-top: 8px;
+}
+
+/* ── Main Panel ─────────────────────────────────────── */
+.seller-main {
+  background: var(--background);
+  overflow-y: auto;
+}
+
+/* override seller-page inside layout — no extra top padding */
+.seller-main .seller-page {
+  padding-top: 48px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.seller-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 1024px) {
+  .seller-stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .seller-stats-grid { grid-template-columns: 1fr; }
+}
+
+.seller-stat-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.seller-stat-card__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.seller-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+/* ── Seller Table ────────────────────────────────────── */
+.seller-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.seller-table th {
+  text-align: left;
+  padding: 16px 20px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted-foreground);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border);
+  background: var(--muted);
+}
+
+.seller-table__row td {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.seller-table__row:last-child td { border-bottom: none; }
+
+.seller-table__row:hover td { background: rgba(79, 70, 229, 0.02); }
+
+.seller-table__img {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--muted);
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+
+.seller-table__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.seller-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
 .seller-page {
   max-width: 1200px;
   margin: 0 auto;

@@ -86,12 +86,16 @@ export function SearchAutocomplete() {
     if (query.trim()) handleSelect(query);
   };
 
-  // Keyboard Navigation
-  const flatItems = [
-    ...results.popular.map(p => ({ label: p, type: "query" })),
-    ...results.categories.map(c => ({ label: c, type: "category" })),
-    ...results.brands.map(b => ({ label: b, type: "brand" })),
-    ...results.products.map(p => ({ label: p.title, type: "product", data: p })),
+  // Keyboard Navigation — typed as discriminated union
+  type FlatItem =
+    | { label: string; type: "query" | "category" | "brand" }
+    | { label: string; type: "product"; data: Product };
+
+  const flatItems: FlatItem[] = [
+    ...results.popular.map(p => ({ label: p, type: "query" as const })),
+    ...results.categories.map(c => ({ label: c, type: "category" as const })),
+    ...results.brands.map(b => ({ label: b, type: "brand" as const })),
+    ...results.products.map(p => ({ label: p.title, type: "product" as const, data: p })),
   ];
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -102,10 +106,10 @@ export function SearchAutocomplete() {
     } else if (e.key === "Enter" && selectedIndex >= 0) {
       const item = flatItems[selectedIndex];
       if (item.type === "product") {
-        router.push(`/product/${(item.data as Product).id}`);
+        router.push(`/product/${item.data.id}`);
         setIsOpen(false);
       } else {
-        handleSelect(item.label, item.type as any);
+        handleSelect(item.label, item.type);
       }
     } else if (e.key === "Escape") {
       setIsOpen(false);

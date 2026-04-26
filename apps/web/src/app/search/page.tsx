@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import { FilterSidebar } from "@/components/search/FilterSidebar";
 import { SearchResults } from "@/components/search/SearchResults";
 import { MOCK_PRODUCTS, RELATED_PRODUCTS } from "@/lib/mock-products";
-import type { Product } from "@/types/product";
+import type { ProductDetail } from "@/types/product";
+
 import "../plp.css";
 
 export const metadata: Metadata = {
@@ -22,9 +23,14 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const brand = (typeof params.brand === "string" ? params.brand : "").toLowerCase();
   const rating = typeof params.rating === "string" ? parseInt(params.rating) : 0;
 
-  // Combine all mock data into one pool
-  const allProducts: Product[] = [
-    ...Object.values(MOCK_PRODUCTS),
+  // Combine all mock data — normalise to a safe common shape
+  const allProducts = [
+    ...Object.values(MOCK_PRODUCTS).map(p => ({
+      id: p.id, title: p.title, price: p.price, comparePrice: p.comparePrice,
+      image: p.image, rating: p.rating, reviews: p.reviews, sellerName: p.sellerName,
+      soldCount: p.soldCount, freeShipping: p.freeShipping, brand: p.brand,
+      category: p.category, outOfStock: p.outOfStock,
+    })),
     ...RELATED_PRODUCTS,
   ];
 

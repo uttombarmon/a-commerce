@@ -9,6 +9,7 @@ export interface Product {
   /** Original/crossed-out price before discount */
   comparePrice?: number;
   image: string;
+  /** Simple image URLs (used by cards/search). ProductDetail overrides this with ProductImage[] */
   images?: string[];
   rating: number;
   reviews: number;
@@ -123,7 +124,7 @@ export interface QAItem {
   date: string;
 }
 
-export interface ProductDetail extends Product {
+export interface ProductDetail extends Omit<Product, 'images'> {
   brand: string;
   sku: string;
   slug: string;
