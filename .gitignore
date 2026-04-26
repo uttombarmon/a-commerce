@@ -62,3 +62,9 @@ tsbuildinfo
 *.db
 *.sqlite
 .drizzle/
+
+# Misc
+.eslintcache
+*.local
+Thumbs.db
+.pnpm-store/
