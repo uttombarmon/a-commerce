@@ -13,6 +13,7 @@ export const metadata: Metadata = {
 };
 
 import { CartProvider } from "@/context/CartContext";
+import { AuthProvider } from "@/components/auth/AuthProvider";
 
 export default function RootLayout({
   children,
@@ -22,14 +23,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} bg-gray-100 dark:bg-gray-950 min-h-screen flex flex-col`}>
-        <CartProvider>
-          <Navbar />
-          <main className="flex-grow flex flex-col">
-            {children}
-          </main>
-          <Footer />
-          <CartDrawer />
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            <Navbar />
+            <main className="flex-grow flex flex-col">
+              {children}
+            </main>
+            <Footer />
+            <CartDrawer />
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

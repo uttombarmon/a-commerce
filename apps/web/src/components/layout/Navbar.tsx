@@ -11,9 +11,12 @@ import { SearchAutocomplete } from "@/components/search/SearchAutocomplete";
 import { MiniCartPopover } from "@/components/cart/MiniCartPopover";
 import { Heart } from "lucide-react";
 
+import { useAuthStore } from "@/store/authStore";
+
 export function Navbar() {
   const { itemCount } = useCart();
   const wishlistItemsCount = useWishlistStore(state => state.lists.reduce((acc, list) => acc + list.items.length, 0));
+  const { isAuthenticated, user, logout } = useAuthStore();
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const { scrollY } = useScroll();
@@ -68,10 +71,36 @@ export function Navbar() {
               <Search size={20} />
             </button>
 
-            {/* Account */}
-            <button className="p-2 text-foreground hover:bg-muted rounded-full transition-colors hidden sm:block">
-              <User size={20} />
-            </button>
+            {/* Auth Actions / Profile */}
+            <div className="flex items-center gap-2">
+              {!isAuthenticated ? (
+                <div className="hidden sm:flex items-center gap-2">
+                  <Link 
+                    href="/login" 
+                    className="px-4 py-2 text-sm font-bold hover:text-brand transition-colors"
+                  >
+                    Log In
+                  </Link>
+                  <Link 
+                    href="/register" 
+                    className="px-4 py-2 text-sm font-bold bg-brand text-white rounded-full hover:opacity-90 transition-all shadow-sm"
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              ) : (
+                <Link 
+                  href="/account" 
+                  className="p-2 text-foreground hover:bg-muted rounded-full transition-colors relative group"
+                  aria-label="Account"
+                >
+                  <User size={20} />
+                  <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-black text-white text-[10px] rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                    Hi, {user?.name.split(' ')[0]}
+                  </span>
+                </Link>
+              )}
+            </div>
 
             {/* Wishlist */}
             <Link href="/wishlists" className="relative p-2 text-foreground hover:bg-muted rounded-full transition-colors hidden sm:flex items-center justify-center">
