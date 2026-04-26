@@ -131,7 +131,15 @@ export const reviews = pgTable('reviews', {
   userId: integer('user_id').references(() => users.id).notNull(),
   productId: integer('product_id').references(() => products.id).notNull(),
   rating: integer('rating').notNull(),
+  title: varchar('title', { length: 255 }),
   comment: text('comment'),
+  pros: text('pros'),
+  cons: text('cons'),
+  images: jsonb('images').default([]),
+  helpfulVotes: integer('helpful_votes').default(0).notNull(),
+  verifiedPurchase: boolean('verified_purchase').default(false).notNull(),
+  sellerResponse: text('seller_response'),
+  status: varchar('status', { length: 50 }).default('pending').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 

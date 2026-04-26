@@ -102,11 +102,14 @@ export interface ProductReview {
   rating: number;
   title: string;
   body: string;
+  pros?: string;
+  cons?: string;
   date: string;
   verified: boolean;
   helpful: number;
   notHelpful: number;
   images?: string[];
+  sellerResponse?: string;
 }
 
 export interface RatingBreakdown {

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Star, ThumbsUp, ThumbsDown, BadgeCheck, Camera } from "lucide-react";
 import Image from "next/image";
 import type { ProductReview, RatingBreakdown } from "@/types/product";
+import { ReviewFormModal } from "./ReviewFormModal";
 
 // ─── Rating Overview ──────────────────────────────────────────────────────────
 
@@ -102,6 +103,24 @@ function ReviewCard({ review }: { review: ProductReview }) {
       <h4 className="pdp-review-card__title">{review.title}</h4>
       <p className="pdp-review-card__body">{review.body}</p>
 
+      {/* Pros & Cons */}
+      {(review.pros || review.cons) && (
+        <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 text-sm mb-3">
+          {review.pros && (
+            <div className="bg-emerald-50 text-emerald-800 p-2 rounded">
+              <span className="font-bold block mb-1">Pros</span>
+              {review.pros}
+            </div>
+          )}
+          {review.cons && (
+            <div className="bg-rose-50 text-rose-800 p-2 rounded">
+              <span className="font-bold block mb-1">Cons</span>
+              {review.cons}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Review images */}
       {review.images && review.images.length > 0 && (
         <div className="pdp-review-card__images">
@@ -134,6 +153,14 @@ function ReviewCard({ review }: { review: ProductReview }) {
           <ThumbsDown size={13} />
         </button>
       </div>
+
+      {/* Seller Response */}
+      {review.sellerResponse && (
+        <div className="mt-4 bg-muted p-4 rounded-xl border-l-4 border-brand">
+          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Response from Seller</p>
+          <p className="text-sm">{review.sellerResponse}</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -143,17 +170,23 @@ function ReviewCard({ review }: { review: ProductReview }) {
 type FilterType = "all" | "verified" | "photos";
 
 export function ReviewsSection({
+  productId = "1",
+  productTitle = "Product",
   rating,
   totalReviews,
   breakdown,
   reviews,
 }: {
+  productId?: string | number;
+  productTitle?: string;
   rating: number;
   totalReviews: number;
   breakdown: RatingBreakdown[];
   reviews: ProductReview[];
 }) {
   const [filter, setFilter] = useState<FilterType>("all");
+  const [sortBy, setSortBy] = useState<"recent" | "helpful" | "highest">("recent");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [page, setPage] = useState(1);
   const PER_PAGE = 3;
 
@@ -163,15 +196,37 @@ export function ReviewsSection({
     return true;
   });
 
-  const paginated = filtered.slice(0, page * PER_PAGE);
-  const hasMore = paginated.length < filtered.length;
+  const sorted = [...filtered].sort((a, b) => {
+    if (sortBy === "helpful") return b.helpful - a.helpful;
+    if (sortBy === "highest") return b.rating - a.rating;
+    return new Date(b.date).getTime() - new Date(a.date).getTime();
+  });
+
+  const paginated = sorted.slice(0, page * PER_PAGE);
+  const hasMore = paginated.length < sorted.length;
 
   return (
     <div className="pdp-reviews" id="reviews">
-      <RatingOverview rating={rating} totalReviews={totalReviews} breakdown={breakdown} />
+      <div className="flex justify-between items-start mb-6">
+        <RatingOverview rating={rating} totalReviews={totalReviews} breakdown={breakdown} />
+        <button 
+          onClick={() => setIsModalOpen(true)}
+          className="px-6 py-3 bg-brand text-white font-bold rounded-xl hover:opacity-90 transition-opacity"
+        >
+          Write a Review
+        </button>
+      </div>
 
-      {/* Filter chips */}
-      <div className="pdp-reviews__filters" role="group" aria-label="Filter reviews">
+      <ReviewFormModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        productId={productId} 
+        productTitle={productTitle} 
+      />
+
+      {/* Filter and Sort bar */}
+      <div className="flex flex-wrap justify-between items-center mb-6 gap-4">
+        <div className="pdp-reviews__filters" role="group" aria-label="Filter reviews">
         {(["all", "verified", "photos"] as FilterType[]).map((f) => (
           <button
             key={f}
@@ -184,6 +239,19 @@ export function ReviewsSection({
             {f === "photos" && <><Camera size={13} /> With Photos</>}
           </button>
         ))}
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-bold text-muted-foreground">Sort By:</span>
+          <select 
+            className="p-2 rounded-lg border border-border bg-white text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as any)}
+          >
+            <option value="recent">Most Recent</option>
+            <option value="helpful">Most Helpful</option>
+            <option value="highest">Highest Rated</option>
+          </select>
+        </div>
       </div>
 
       {/* Review cards */}
