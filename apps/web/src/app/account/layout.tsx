@@ -15,7 +15,10 @@ const NAV_LINKS = [
 
 export default function AccountLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const logout = useAuthStore(state => state.logout);
+  const { user, logout } = useAuthStore();
+
+  const userInitial = user?.name?.charAt(0) || "U";
+  const userName = user?.name || "User";
 
   return (
     <div className="bg-muted/30 min-h-screen pb-12">
@@ -23,11 +26,11 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
       <div className="bg-brand text-white py-12 px-6">
         <div className="max-w-6xl mx-auto flex items-center gap-6">
           <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center text-3xl font-bold border-4 border-white/10 backdrop-blur-sm">
-            J
+            {userInitial}
           </div>
           <div>
-            <h1 className="text-3xl font-bold">Hello, Jane Doe</h1>
-            <p className="text-brand-100">Manage your profile and orders</p>
+            <h1 className="text-3xl font-bold">Hello, {userName}</h1>
+            <p className="text-brand-100 opacity-80">Manage your profile and orders</p>
           </div>
         </div>
       </div>
