@@ -72,18 +72,18 @@ export function Navbar() {
             </button>
 
             {/* Auth Actions / Profile */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               {!isAuthenticated ? (
-                <div className="hidden sm:flex items-center gap-2">
+                <div className="hidden sm:flex items-center gap-3">
                   <Link 
                     href="/login" 
-                    className="px-4 py-2 text-sm font-bold hover:text-brand transition-colors"
+                    className="px-5 py-2.5 text-sm font-black text-foreground hover:text-brand transition-all rounded-full hover:bg-brand/5"
                   >
-                    Log In
+                    Login
                   </Link>
                   <Link 
                     href="/register" 
-                    className="px-4 py-2 text-sm font-bold bg-brand text-white rounded-full hover:opacity-90 transition-all shadow-sm"
+                    className="px-6 py-2.5 text-sm font-black bg-brand text-white rounded-full hover:shadow-[0_8px_20px_-6px_rgba(255,107,0,0.4)] hover:-translate-y-0.5 transition-all active:scale-95"
                   >
                     Sign Up
                   </Link>
@@ -91,22 +91,24 @@ export function Navbar() {
               ) : (
                 <Link 
                   href="/account" 
-                  className="p-2 text-foreground hover:bg-muted rounded-full transition-colors relative group"
-                  aria-label="Account"
+                  className="flex items-center gap-2 p-1.5 pr-4 bg-muted/50 hover:bg-muted rounded-full transition-all border border-border/50 group"
                 >
-                  <User size={20} />
-                  <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-black text-white text-[10px] rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                    Hi, {user?.name.split(' ')[0]}
-                  </span>
+                  <div className="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center text-brand">
+                    <User size={18} strokeWidth={2.5} />
+                  </div>
+                  <div className="hidden md:block text-left">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground leading-none mb-0.5">Account</p>
+                    <p className="text-sm font-bold text-foreground leading-none">{user?.name.split(' ')[0]}</p>
+                  </div>
                 </Link>
               )}
             </div>
 
             {/* Wishlist */}
-            <Link href="/wishlists" className="relative p-2 text-foreground hover:bg-muted rounded-full transition-colors hidden sm:flex items-center justify-center">
-              <Heart size={20} />
+            <Link href="/wishlists" className="relative p-2.5 text-foreground hover:bg-muted rounded-full transition-all">
+              <Heart size={20} strokeWidth={2} />
               {wishlistItemsCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border-2 border-surface">
+                <span className="absolute top-1.5 right-1.5 bg-rose-500 text-white text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center ring-2 ring-background">
                   {wishlistItemsCount}
                 </span>
               )}
