@@ -14,7 +14,10 @@ export const register = async (req: Request, res: Response) => {
     const [newUser] = await db.insert(users).values({ name, email, passwordHash, role: 'customer' }).returning();
     const token = jwt.sign({ id: newUser.id, role: newUser.role }, process.env.JWT_SECRET!, { expiresIn: '7d' });
     res.status(201).json({ success: true, token, user: { id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role } });
-  } catch (error: any) { res.status(500).json({ success: false, message: error.message }); }
+  } catch (error: any) { 
+    console.error('Register Error:', error);
+    res.status(500).json({ success: false, message: error.message || error.toString() }); 
+  }
 };
 
 export const login = async (req: Request, res: Response) => {

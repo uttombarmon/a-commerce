@@ -44,8 +44,8 @@ export default function RegisterPage() {
           <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-emerald-500/10 blur-[120px]" />
           <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-brand/10 blur-[120px]" />
         </div>
-        
-        <motion.div 
+
+        <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           className="relative z-10 w-full max-w-md px-6 text-center"
@@ -58,8 +58,8 @@ export default function RegisterPage() {
             <p className="text-gray-400 font-medium mb-8">
               We've sent a verification link to <span className="text-white font-bold">{formData.email}</span>. Please verify your email to continue.
             </p>
-            <Link 
-              href="/login" 
+            <Link
+              href="/login"
               className="inline-flex items-center gap-2 text-brand font-black hover:underline decoration-2 underline-offset-4"
             >
               Back to Sign In
@@ -80,7 +80,7 @@ export default function RegisterPage() {
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
       </div>
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
@@ -88,7 +88,7 @@ export default function RegisterPage() {
       >
         <div className="glass-card p-8 md:p-10 rounded-[2.5rem] border border-white/10 shadow-2xl backdrop-blur-2xl">
           <div className="text-center mb-10">
-            <motion.div 
+            <motion.div
               whileHover={{ scale: 1.05 }}
               className="w-16 h-16 bg-gradient-to-tr from-brand to-indigo-600 text-white rounded-2xl flex items-center justify-center font-black text-3xl mx-auto mb-6 shadow-xl shadow-brand/20 -rotate-3"
             >
@@ -100,7 +100,7 @@ export default function RegisterPage() {
 
           <AnimatePresence mode="wait">
             {error && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
@@ -116,11 +116,11 @@ export default function RegisterPage() {
               <label className="text-xs font-black uppercase tracking-widest text-gray-500 ml-1">Full Name</label>
               <div className="relative group">
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-brand transition-colors" size={18} />
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   required
                   value={formData.name}
-                  onChange={e => setFormData({...formData, name: e.target.value})}
+                  onChange={e => setFormData({ ...formData, name: e.target.value })}
                   className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-2xl text-white outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition-all font-medium"
                   placeholder="John Doe"
                 />
@@ -131,11 +131,11 @@ export default function RegisterPage() {
               <label className="text-xs font-black uppercase tracking-widest text-gray-500 ml-1">Email Address</label>
               <div className="relative group">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-brand transition-colors" size={18} />
-                <input 
-                  type="email" 
+                <input
+                  type="email"
                   required
                   value={formData.email}
-                  onChange={e => setFormData({...formData, email: e.target.value})}
+                  onChange={e => setFormData({ ...formData, email: e.target.value })}
                   className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-2xl text-white outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition-all font-medium"
                   placeholder="name@example.com"
                 />
@@ -146,20 +146,20 @@ export default function RegisterPage() {
               <label className="text-xs font-black uppercase tracking-widest text-gray-500 ml-1">Password</label>
               <div className="relative group">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-brand transition-colors" size={18} />
-                <input 
-                  type="password" 
+                <input
+                  type="password"
                   required
                   minLength={8}
                   value={formData.password}
-                  onChange={e => setFormData({...formData, password: e.target.value})}
+                  onChange={e => setFormData({ ...formData, password: e.target.value })}
                   className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-2xl text-white outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition-all font-medium"
                   placeholder="Min. 8 characters"
                 />
               </div>
             </div>
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               disabled={loading}
               className="w-full py-4 bg-white text-black font-black rounded-2xl hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-3 transition-all mt-6"
             >

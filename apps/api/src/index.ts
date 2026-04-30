@@ -1,8 +1,8 @@
+import './env';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
-import dotenv from 'dotenv';
 import { errorHandler } from './middleware/error';
 import authRoutes from './routes/auth';
 import productRoutes from './routes/products';
@@ -14,8 +14,6 @@ import reviewRoutes from './routes/reviews';
 import paymentRoutes from './routes/payments';
 import adminRoutes from './routes/admin';
 import sellerRoutes from './routes/sellers';
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 4000;
