@@ -13,7 +13,7 @@ export const createOrder = async (req: any, res: Response) => {
     if (!items.length) return res.status(400).json({ message: 'Cart is empty' });
     let total = items.reduce((acc, item) => acc + Number(item.price) * item.quantity, 0);
     const order = await db.transaction(async (tx) => {
-      const [newOrder] = await tx.insert(orders).values({ userId, total: total.toString(), shippingAddress, status: 'pending' }).returning();
+      const [newOrder] = await tx.insert(orders).values({ userId, subtotal: total.toString(), total: total.toString(), shippingAddress, status: 'pending' }).returning();
       await tx.insert(orderItems).values(items.map(item => ({ orderId: newOrder.id, productId: item.productId, quantity: item.quantity, priceAtPurchase: item.price })));
       for (const item of items) await tx.update(products).set({ stock: item.stock - item.quantity }).where(eq(products.id, item.productId));
       await tx.delete(cartItems).where(eq(cartItems.cartId, userCart[0].id));

@@ -8,6 +8,13 @@
       "when": 1777152089738,
       "tag": "0000_tan_tiger_shark",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1777585261693,
+      "tag": "0001_daily_tarantula",
+      "breakpoints": true
     }
   ]
 }

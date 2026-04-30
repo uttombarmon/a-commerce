@@ -12,7 +12,8 @@ import {
   ArrowUpRight,
   Package,
   Star,
-  MoreVertical
+  MoreVertical,
+  Globe
 } from "lucide-react";
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area,

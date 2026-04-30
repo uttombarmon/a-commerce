@@ -5,28 +5,33 @@ import path from 'path';
 
 dotenv.config({ path: path.join(process.cwd(), '.env') });
 
+import bcrypt from 'bcryptjs';
+
 async function main() {
   console.log('Seeding database...');
+  
+  const salt = await bcrypt.genSalt(10);
+  const passwordHash = await bcrypt.hash('password123', salt);
 
   // 1. Seed Users
   const [adminUser] = await db.insert(users).values({
     name: 'Admin User',
     email: 'admin@marketplace.com',
-    passwordHash: 'hashed_password_here',
+    passwordHash,
     role: 'admin',
   }).returning();
 
   const [sellerUser] = await db.insert(users).values({
     name: 'John Seller',
     email: 'john@seller.com',
-    passwordHash: 'hashed_password_here',
+    passwordHash,
     role: 'seller',
   }).returning();
 
   const [customerUser] = await db.insert(users).values({
     name: 'Jane Customer',
     email: 'jane@customer.com',
-    passwordHash: 'hashed_password_here',
+    passwordHash,
     role: 'customer',
     address: '123 Main St, New York, NY',
   }).returning();

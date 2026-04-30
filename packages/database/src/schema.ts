@@ -1,4 +1,4 @@
-import { pgTable, serial, text, varchar, decimal, timestamp, integer, boolean, jsonb, index } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, varchar, decimal, timestamp, integer, boolean, jsonb, index, PgColumn, PgTableWithColumns } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
 // --- Users Table ---
@@ -269,7 +269,6 @@ export const usersRelations = relations(users, ({ one, many }) => ({
     references: [cart.userId],
   }),
   wishlists: many(wishlists),
-  wishlists: many(wishlists),
   productAlerts: many(productAlerts),
   addresses: many(addresses),
   oauthAccounts: many(oauthAccounts),
@@ -307,7 +306,7 @@ export const productsRelations = relations(products, ({ one, many }) => ({
   wishlistItems: many(wishlistItems),
 }));
 
-export const productVariantsRelations = relations(productVariants, ({ one }) => ({
+export const productVariantsRelations = relations(productVariants, ({ one, many }) => ({
   product: one(products, {
     fields: [productVariants.productId],
     references: [products.id],
@@ -427,3 +426,7 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
     references: [users.id],
   }),
 }));
+function many(cartItems: PgTableWithColumns<{ name: "cart_items"; schema: undefined; columns: { id: PgColumn<{ name: "id"; tableName: "cart_items"; dataType: "number"; columnType: "PgSerial"; data: number; driverParam: number; notNull: true; hasDefault: true; enumValues: undefined; baseColumn: never; }, {}, {}>; cartId: PgColumn<{ name: "cart_id"; tableName: "cart_items"; dataType: "number"; columnType: "PgInteger"; data: number; driverParam: string | number; notNull: true; hasDefault: false; enumValues: undefined; baseColumn: never; }, {}, {}>; productId: PgColumn<{ name: "product_id"; tableName: "cart_items"; dataType: "number"; columnType: "PgInteger"; data: number; driverParam: string | number; notNull: true; hasDefault: false; enumValues: undefined; baseColumn: never; }, {}, {}>; variantId: PgColumn<{ name: "variant_id"; tableName: "cart_items"; dataType: "number"; columnType: "PgInteger"; data: number; driverParam: string | number; notNull: false; hasDefault: false; enumValues: undefined; baseColumn: never; }, {}, {}>; quantity: PgColumn<{ name: "quantity"; tableName: "cart_items"; dataType: "number"; columnType: "PgInteger"; data: number; driverParam: string | number; notNull: true; hasDefault: true; enumValues: undefined; baseColumn: never; }, {}, {}>; createdAt: PgColumn<{ name: "created_at"; tableName: "cart_items"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: true; enumValues: undefined; baseColumn: never; }, {}, {}>; }; dialect: "pg"; }>): any {
+  throw new Error('Function not implemented.');
+}
+

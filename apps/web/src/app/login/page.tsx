@@ -31,7 +31,7 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (data.success) {
-        login(data.user, data.accessToken);
+        login(data.user, data.token || data.accessToken);
         router.push("/");
       } else {
         setError(data.error || "Invalid credentials");

@@ -77,7 +77,7 @@ export function ProductCard({
 }: ProductCardProps) {
   const { addItem } = useCart();
   const { toggleItem, isInList, activeListId } = useWishlistStore();
-  const wishlisted = isInList(activeListId || 'default', id);
+  const wishlisted = isInList(activeListId || 'default', Number(id));
   const [cartAdded, setCartAdded] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
 
@@ -97,7 +97,7 @@ export function ProductCard({
     (e: React.MouseEvent) => {
       e.preventDefault();
       toggleItem(activeListId || 'default', {
-        productId: id,
+        productId: Number(id),
         title,
         price,
         image,
