@@ -6,6 +6,8 @@ import {
   LayoutDashboard, Package, ShoppingCart, BarChart2,
   Star, Settings, ChevronRight, Store, HelpCircle
 } from "lucide-react";
+import { useAuthStore } from "@/store/authStore";
+import { RouteGuard } from "@/components/auth/RouteGuard";
 import "@/components/seller/seller.css";
 
 const NAV_ITEMS = [
@@ -19,8 +21,10 @@ const NAV_ITEMS = [
 
 export default function SellerLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { user } = useAuthStore();
 
   return (
+    <RouteGuard allowedRoles={['seller']}>
     <div className="seller-layout">
       {/* ── Sidebar ─────────────────────────────── */}
       <aside className="seller-sidebar">
@@ -67,5 +71,6 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
         {children}
       </main>
     </div>
+    </RouteGuard>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 import { Mail, Lock, Loader2, ArrowRight } from "lucide-react";
 import Image from "next/image";
@@ -10,7 +10,9 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const login = useAuthStore(state => state.login);
+  const redirectTo = searchParams.get('from') || '/';
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,7 +34,7 @@ export default function LoginPage() {
 
       if (data.success) {
         login(data.user, data.token || data.accessToken);
-        router.push("/");
+        router.push(redirectTo);
       } else {
         setError(data.error || "Invalid credentials");
       }

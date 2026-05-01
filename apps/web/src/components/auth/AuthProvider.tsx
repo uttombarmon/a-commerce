@@ -38,7 +38,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     refreshSession();
-  }, [login, logout]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Optionally show a global loader while checking session
   if (isRefreshing) {

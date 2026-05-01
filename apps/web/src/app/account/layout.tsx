@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { RouteGuard } from "@/components/auth/RouteGuard";
 import { User, Package, Shield, MapPin, CreditCard, LogOut } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 
@@ -21,6 +22,7 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
   const userName = user?.name || "User";
 
   return (
+    <RouteGuard allowedRoles={['user']}>
     <div className="bg-muted/30 min-h-screen pb-12">
       {/* Account Header */}
       <div className="bg-brand text-white py-12 px-6">
@@ -75,5 +77,6 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
         </div>
       </div>
     </div>
+    </RouteGuard>
   );
 }

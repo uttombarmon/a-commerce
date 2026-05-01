@@ -16,6 +16,7 @@ import {
   User
 } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
+import { RouteGuard } from "@/components/auth/RouteGuard";
 import { motion } from "framer-motion";
 
 const ADMIN_NAV = [
@@ -32,10 +33,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const { user, logout } = useAuthStore();
 
-  // Role check (mock for now)
-  // if (user?.role !== 'admin') return redirect('/login');
-
   return (
+    <RouteGuard allowedRoles={['admin']}>
     <div className="flex h-screen bg-[#f8f9fc] overflow-hidden font-sans">
       {/* Sidebar */}
       <aside className="w-72 bg-white border-r border-gray-200 hidden lg:flex flex-col">
@@ -125,5 +124,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
       </main>
     </div>
+    </RouteGuard>
   );
 }
