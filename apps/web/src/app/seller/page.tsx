@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   Plus, Package, TrendingUp, DollarSign, Eye,
   Edit, Trash2, Search, Filter, MoreHorizontal,
-  CheckCircle, Clock, XCircle, Archive, AlertCircle
+  CheckCircle, Clock, XCircle, Archive, AlertCircle,
+  ArrowUpRight, ArrowDownRight, Zap, Users
 } from "lucide-react";
 import "@/components/seller/seller.css";
 
@@ -34,6 +36,21 @@ const MOCK_PRODUCTS: SellerProduct[] = [
   { id: 5, title: "Jabra Evolve2 85 Professional Headset",     status: "archived",     stock: 0,  price: 449.00, sales: 33,  image: "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=200" },
 ];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: { y: 0, opacity: 1 }
+};
+
 export default function SellerDashboard() {
   const [products, setProducts] = useState<SellerProduct[]>(MOCK_PRODUCTS);
   const [search, setSearch] = useState("");
@@ -50,29 +67,129 @@ export default function SellerDashboard() {
   const activeCount  = products.filter(p => p.status === "active").length;
 
   return (
-    <div className="seller-page">
+    <motion.div 
+      className="seller-page"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
       {/* ── Header ─────────────────────────────────── */}
       <header className="seller-header">
-        <div>
-          <h1 className="seller-title">Seller Central</h1>
-          <p className="text-muted-foreground mt-1">Manage your products, orders, and analytics.</p>
-        </div>
-        <Link href="/seller/products/new" className="btn-primary flex items-center gap-2">
-          <Plus size={18} />
-          Add Product
-        </Link>
+        <motion.div variants={itemVariants}>
+          <div className="flex items-center gap-3 mb-2">
+            <span className="px-3 py-1 bg-brand/10 text-brand text-[10px] font-black uppercase tracking-widest rounded-full">Seller Dashboard</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Live Status</span>
+          </div>
+          <h1 className="seller-title">Welcome back, Shop Owner</h1>
+          <p className="text-muted-foreground mt-1">Here's what's happening with your store today.</p>
+        </motion.div>
+        <motion.div variants={itemVariants}>
+          <Link href="/seller/products/new" className="px-6 py-3 bg-brand text-white rounded-2xl font-black text-sm flex items-center gap-2 hover:shadow-[0_8px_25px_-5px_rgba(255,107,0,0.4)] transition-all hover:-translate-y-1 active:scale-95">
+            <Plus size={20} strokeWidth={3} />
+            Add New Product
+          </Link>
+        </motion.div>
       </header>
 
       {/* ── Stats ──────────────────────────────────── */}
-      <div className="seller-stats-grid">
-        <StatCard icon={<DollarSign />} label="Total Revenue" value={`$${totalRevenue.toLocaleString("en-US", { maximumFractionDigits: 0 })}`} color="#4f46e5" />
-        <StatCard icon={<Package />}    label="Total Products" value={String(products.length)} color="#0ea5e9" />
-        <StatCard icon={<TrendingUp />} label="Total Orders" value={String(totalOrders)} color="#10b981" />
-        <StatCard icon={<CheckCircle />} label="Active Listings" value={String(activeCount)} color="#f59e0b" />
+      <motion.div className="seller-stats-grid" variants={itemVariants}>
+        <StatCard 
+          icon={<DollarSign />} 
+          label="Total Revenue" 
+          value={`$${totalRevenue.toLocaleString("en-US", { maximumFractionDigits: 0 })}`} 
+          color="#4f46e5" 
+          trend="+12.5%" 
+          isPositive={true}
+        />
+        <StatCard 
+          icon={<Package />}    
+          label="Total Products" 
+          value={String(products.length)} 
+          color="#0ea5e9" 
+          trend="+2" 
+          isPositive={true}
+        />
+        <StatCard 
+          icon={<TrendingUp />} 
+          label="Total Orders" 
+          value={String(totalOrders)} 
+          color="#10b981" 
+          trend="+18%" 
+          isPositive={true}
+        />
+        <StatCard 
+          icon={<Users />} 
+          label="Store Visitors" 
+          value="2.4k" 
+          color="#f59e0b" 
+          trend="-3%" 
+          isPositive={false}
+        />
+      </motion.div>
+
+      {/* ── Performance & Health ──────────────────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <motion.div className="lg:col-span-2 form-card !p-6" variants={itemVariants}>
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="font-black text-lg">Sales Performance</h3>
+              <p className="text-xs text-muted-foreground">Revenue over the last 7 days</p>
+            </div>
+            <select className="text-xs font-bold bg-muted border-none rounded-lg px-3 py-1.5 focus:ring-0">
+              <option>Last 7 days</option>
+              <option>Last 30 days</option>
+            </select>
+          </div>
+          
+          {/* Mock Chart */}
+          <div className="h-48 flex items-end justify-between gap-2 px-2">
+            {[40, 70, 45, 90, 65, 80, 100].map((height, i) => (
+              <motion.div 
+                key={i}
+                className="w-full bg-brand/10 rounded-t-lg relative group"
+                initial={{ height: 0 }}
+                animate={{ height: `${height}%` }}
+                transition={{ delay: 0.5 + i * 0.1, duration: 0.8 }}
+              >
+                <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-foreground text-background text-[10px] font-black px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  ${(height * 15).toLocaleString()}
+                </div>
+                <div className="absolute inset-0 bg-brand opacity-20 group-hover:opacity-40 transition-opacity rounded-t-lg" />
+              </motion.div>
+            ))}
+          </div>
+          <div className="flex justify-between mt-4 px-2">
+            {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => (
+              <span key={day} className="text-[10px] font-bold text-muted-foreground uppercase">{day}</span>
+            ))}
+          </div>
+        </motion.div>
+
+        <motion.div className="form-card !p-6 flex flex-col" variants={itemVariants}>
+          <h3 className="font-black text-lg mb-4">Store Health</h3>
+          <div className="flex-1 flex flex-col gap-6">
+            <HealthMetric label="Fulfillment Rate" value={98} color="text-emerald-500" />
+            <HealthMetric label="Customer Satisfaction" value={85} color="text-brand" />
+            <HealthMetric label="Response Time" value={92} color="text-amber-500" />
+            
+            <div className="mt-auto pt-6 border-t border-border/50">
+              <div className="p-4 bg-muted/50 rounded-2xl flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center text-brand">
+                  <Zap size={20} />
+                </div>
+                <div>
+                  <p className="text-xs font-black">Pro Tip</p>
+                  <p className="text-[11px] text-muted-foreground">Add high-quality videos to your products to increase conversion by 30%.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
 
       {/* ── Toolbar ────────────────────────────────── */}
-      <div className="seller-toolbar">
+      <motion.div className="seller-toolbar" variants={itemVariants}>
         <div className="search-bar" style={{ maxWidth: 360 }}>
           <Search className="search-bar__icon" size={16} />
           <input
@@ -83,25 +200,25 @@ export default function SellerDashboard() {
             onChange={e => setSearch(e.target.value)}
           />
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 bg-muted p-1 rounded-xl">
           {["all", "active", "draft", "out_of_stock", "archived"].map(s => (
             <button
               key={s}
               onClick={() => setStatusFilter(s)}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold capitalize transition-all ${
+              className={`px-4 py-2 rounded-lg text-xs font-black capitalize transition-all ${
                 statusFilter === s
-                  ? "bg-brand text-white"
-                  : "bg-muted text-muted-foreground hover:bg-border"
+                  ? "bg-white text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               {s === "all" ? "All" : STATUS_BADGE[s]?.label}
             </button>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       {/* ── Product Table ───────────────────────────── */}
-      <div className="form-card !p-0 overflow-hidden">
+      <motion.div className="form-card !p-0 overflow-hidden" variants={itemVariants}>
         <table className="seller-table">
           <thead>
             <tr>
@@ -111,18 +228,18 @@ export default function SellerDashboard() {
               <th>Stock</th>
               <th>Sales</th>
               <th>Revenue</th>
-              <th></th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filtered.map(product => (
-              <tr key={product.id} className="seller-table__row">
+              <tr key={product.id} className="seller-table__row group">
                 <td>
                   <div className="flex items-center gap-3">
-                    <div className="seller-table__img">
+                    <div className="seller-table__img ring-2 ring-transparent group-hover:ring-brand/20 transition-all">
                       {product.image && <img src={product.image} alt="" />}
                     </div>
-                    <span className="text-sm font-semibold line-clamp-2 max-w-xs">{product.title}</span>
+                    <span className="text-sm font-bold line-clamp-1 max-w-[200px]">{product.title}</span>
                   </div>
                 </td>
                 <td>
@@ -131,24 +248,37 @@ export default function SellerDashboard() {
                     {STATUS_BADGE[product.status]?.label}
                   </span>
                 </td>
-                <td className="font-bold">${product.price.toFixed(2)}</td>
+                <td className="font-black text-sm">${product.price.toFixed(2)}</td>
                 <td>
-                  <span className={product.stock === 0 ? "text-red-500 font-bold" : "font-semibold"}>
-                    {product.stock}
-                  </span>
+                  <div className="flex flex-col gap-1">
+                    <span className={`text-sm font-bold ${product.stock === 0 ? "text-red-500" : "text-foreground"}`}>
+                      {product.stock}
+                    </span>
+                    <div className="w-16 h-1 bg-muted rounded-full overflow-hidden">
+                      <div 
+                        className={`h-full ${product.stock > 10 ? 'bg-emerald-500' : product.stock > 0 ? 'bg-amber-500' : 'bg-red-500'}`} 
+                        style={{ width: `${Math.min(100, (product.stock / 50) * 100)}%` }}
+                      />
+                    </div>
+                  </div>
                 </td>
-                <td>{product.sales ?? 0}</td>
-                <td className="font-bold text-emerald-600">
+                <td>
+                  <span className="text-sm font-bold">{product.sales ?? 0}</span>
+                </td>
+                <td className="font-black text-emerald-600 text-sm">
                   ${(product.price * (product.sales || 0)).toLocaleString("en-US", { maximumFractionDigits: 0 })}
                 </td>
                 <td>
-                  <div className="flex items-center gap-2">
-                    <Link href={`/seller/products/${product.id}/edit`} className="p-2 hover:bg-muted rounded-lg transition-colors">
-                      <Edit size={16} className="text-muted-foreground" />
+                  <div className="flex items-center gap-1">
+                    <Link href={`/seller/products/${product.id}/edit`} className="p-2 hover:bg-muted rounded-xl transition-all text-muted-foreground hover:text-foreground">
+                      <Edit size={16} />
                     </Link>
-                    <button className="p-2 hover:bg-red-50 rounded-lg transition-colors"
+                    <button className="p-2 hover:bg-red-50 rounded-xl transition-all text-muted-foreground hover:text-red-500"
                       onClick={() => setProducts(prev => prev.filter(p => p.id !== product.id))}>
-                      <Trash2 size={16} className="text-red-400" />
+                      <Trash2 size={16} />
+                    </button>
+                    <button className="p-2 hover:bg-muted rounded-xl transition-all text-muted-foreground hover:text-foreground">
+                      <MoreHorizontal size={16} />
                     </button>
                   </div>
                 </td>
@@ -159,25 +289,52 @@ export default function SellerDashboard() {
 
         {filtered.length === 0 && (
           <div className="py-20 text-center">
-            <Package size={40} className="mx-auto text-muted-foreground opacity-20 mb-4" />
-            <p className="font-bold text-lg">No products found</p>
-            <p className="text-muted-foreground text-sm">Try changing your filters or add a new product.</p>
+            <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+              <Package size={32} className="text-muted-foreground opacity-40" />
+            </div>
+            <p className="font-black text-lg">No products found</p>
+            <p className="text-muted-foreground text-sm max-w-xs mx-auto mt-1">Try changing your filters or add a new product to get started.</p>
           </div>
         )}
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function StatCard({ icon, label, value, color, trend, isPositive }: { icon: React.ReactNode; label: string; value: string; color: string, trend: string, isPositive: boolean }) {
+  return (
+    <div className="seller-stat-card group hover:border-brand/30 transition-all cursor-default">
+      <div className="seller-stat-card__icon" style={{ background: color + "1a", color }}>
+        {icon}
+      </div>
+      <div className="flex-1">
+        <div className="flex items-center justify-between mb-1">
+          <p className="text-sm text-muted-foreground font-bold">{label}</p>
+          <div className={`flex items-center text-[10px] font-black px-1.5 py-0.5 rounded-full ${isPositive ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'}`}>
+            {isPositive ? <ArrowUpRight size={10} className="mr-0.5" /> : <ArrowDownRight size={10} className="mr-0.5" />}
+            {trend}
+          </div>
+        </div>
+        <p className="text-3xl font-black tracking-tight">{value}</p>
       </div>
     </div>
   );
 }
 
-function StatCard({ icon, label, value, color }: { icon: React.ReactNode; label: string; value: string; color: string }) {
+function HealthMetric({ label, value, color }: { label: string; value: number; color: string }) {
   return (
-    <div className="seller-stat-card">
-      <div className="seller-stat-card__icon" style={{ background: color + "1a", color }}>
-        {icon}
+    <div className="flex flex-col gap-2">
+      <div className="flex justify-between items-center">
+        <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{label}</span>
+        <span className={`text-xs font-black ${color}`}>{value}%</span>
       </div>
-      <div>
-        <p className="text-2xl font-black">{value}</p>
-        <p className="text-sm text-muted-foreground">{label}</p>
+      <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+        <motion.div 
+          className={`h-full ${color.replace('text-', 'bg-')}`}
+          initial={{ width: 0 }}
+          animate={{ width: `${value}%` }}
+          transition={{ duration: 1, ease: "easeOut" }}
+        />
       </div>
     </div>
   );

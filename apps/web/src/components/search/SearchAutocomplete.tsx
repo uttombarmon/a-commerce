@@ -130,7 +130,7 @@ export function SearchAutocomplete() {
   return (
     <div className="search-container" ref={containerRef} onKeyDown={handleKeyDown}>
       <form onSubmit={handleSubmit} className="search-bar">
-        <Search className="search-bar__icon" size={18} />
+        <Search className="search-bar__icon" size={20} />
         <input
           type="text"
           placeholder="Search for items, brands, or categories..."
@@ -144,26 +144,29 @@ export function SearchAutocomplete() {
         />
         {query && (
           <button type="button" onClick={() => setQuery("")} className="search-bar__clear">
-            <X size={14} />
+            <X size={16} />
           </button>
         )}
       </form>
 
       {/* Autocomplete Dropdown */}
       {isOpen && (
-        <div className="search-dropdown glass shadow-2xl border border-border/50 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="search-dropdown animate-in fade-in zoom-in-95 duration-200">
           
           <div className="search-dropdown__content scrollbar-hide">
             
             {/* ── Recent Searches ── */}
             {!query && recentSearches.length > 0 && (
               <section className="search-section">
-                <h4 className="search-section__title"><Clock size={12} /> Recent</h4>
+                <h4 className="search-section__title"><Clock size={14} /> Recent Searches</h4>
                 <div className="search-list">
                   {recentSearches.map((s, i) => (
-                    <button key={i} onClick={() => handleSelect(s)} className="search-item">
-                      {s}
-                      <ArrowRight size={12} className="opacity-0 group-hover:opacity-100" />
+                    <button key={i} onClick={() => handleSelect(s)} className="search-item group">
+                      <div className="flex items-center gap-3">
+                        <Clock size={14} className="text-muted-foreground" />
+                        <span>{s}</span>
+                      </div>
+                      <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-all text-brand" />
                     </button>
                   ))}
                 </div>
@@ -173,10 +176,14 @@ export function SearchAutocomplete() {
             {/* ── Popular / Trends ── */}
             {!query && results.popular.length > 0 && (
               <section className="search-section">
-                <h4 className="search-section__title"><TrendingUp size={12} /> Trending Now</h4>
-                <div className="search-list--grid">
+                <h4 className="search-section__title"><TrendingUp size={14} /> Trending Now</h4>
+                <div className="flex flex-wrap gap-2">
                   {results.popular.map((s, i) => (
-                    <button key={i} onClick={() => handleSelect(s)} className="pill-btn">
+                    <button 
+                      key={i} 
+                      onClick={() => handleSelect(s)} 
+                      className="px-4 py-2 bg-muted hover:bg-brand hover:text-white rounded-xl text-sm font-bold transition-all border border-transparent hover:shadow-lg"
+                    >
                       {s}
                     </button>
                   ))}
@@ -186,25 +193,31 @@ export function SearchAutocomplete() {
 
             {/* ── Categories & Brands ── */}
             {query && (results.categories.length > 0 || results.brands.length > 0) && (
-              <div className="flex gap-8 mb-4">
+              <div className="flex flex-col sm:flex-row gap-8 mb-8">
                 {results.categories.length > 0 && (
                   <section className="flex-1">
-                    <h4 className="search-section__title"><Package size={12} /> Categories</h4>
-                    {results.categories.map((c, i) => (
-                      <button key={i} onClick={() => handleSelect(c, "category")} className="search-item group">
-                        <span className="text-brand">in</span> {c}
-                      </button>
-                    ))}
+                    <h4 className="search-section__title"><Package size={14} /> Categories</h4>
+                    <div className="search-list">
+                      {results.categories.map((c, i) => (
+                        <button key={i} onClick={() => handleSelect(c, "category")} className="search-item group">
+                          <span><span className="text-brand font-black">in</span> {c}</span>
+                          <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-all" />
+                        </button>
+                      ))}
+                    </div>
                   </section>
                 )}
                 {results.brands.length > 0 && (
                   <section className="flex-1">
-                    <h4 className="search-section__title"><Tag size={12} /> Brands</h4>
-                    {results.brands.map((b, i) => (
-                      <button key={i} onClick={() => handleSelect(b, "brand")} className="search-item">
-                        {b}
-                      </button>
-                    ))}
+                    <h4 className="search-section__title"><Tag size={14} /> Brands</h4>
+                    <div className="search-list">
+                      {results.brands.map((b, i) => (
+                        <button key={i} onClick={() => handleSelect(b, "brand")} className="search-item group">
+                          <span>{b}</span>
+                          <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-all" />
+                        </button>
+                      ))}
+                    </div>
                   </section>
                 )}
               </div>
@@ -212,34 +225,49 @@ export function SearchAutocomplete() {
 
             {/* ── Product Suggestions ── */}
             {query && (
-              <section className="search-section border-t border-border pt-4 mt-2">
-                <h4 className="search-section__title">Products</h4>
+              <section className="search-section pt-6 border-t border-border/50">
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="search-section__title !mb-0">Product Results</h4>
+                  {results.products.length > 0 && (
+                    <span className="text-[10px] font-black text-brand uppercase tracking-widest">{results.products.length} items found</span>
+                  )}
+                </div>
+                
                 {loading ? (
-                  <div className="flex flex-col gap-2">
-                    {[1,2,3].map(i => <div key={i} className="skeleton h-14 w-full rounded-lg" />)}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {[1,2,3,4].map(i => <div key={i} className="h-20 w-full bg-muted animate-pulse rounded-2xl" />)}
                   </div>
                 ) : results.products.length > 0 ? (
                   <div className="search-products">
-                    {results.products.map((p, i) => (
-                      <Link 
-                        key={p.id} 
-                        href={`/product/${p.id}`} 
-                        className={`search-product-item ${selectedIndex === (flatItems.findIndex(f => f.label === p.title)) ? 'bg-muted' : ''}`}
-                        onClick={() => setIsOpen(false)}
-                      >
-                        <div className="search-product-item__img">
-                          <img src={p.image} alt="" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold truncate">{p.title}</p>
-                          <p className="text-xs text-muted-foreground">${p.price}</p>
-                        </div>
-                        <CornerDownLeft size={14} className="opacity-20" />
-                      </Link>
-                    ))}
+                    {results.products.map((p, i) => {
+                      const itemIndex = flatItems.findIndex(f => f.type === "product" && f.data.id === p.id);
+                      return (
+                        <Link 
+                          key={p.id} 
+                          href={`/product/${p.id}`} 
+                          className={`search-product-item group ${selectedIndex === itemIndex ? 'bg-muted border-brand/30' : ''}`}
+                          onClick={() => setIsOpen(false)}
+                        >
+                          <div className="search-product-item__img shadow-sm group-hover:scale-110 transition-transform">
+                            <img src={p.image} alt="" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-black truncate text-foreground group-hover:text-brand transition-colors">{p.title}</p>
+                            <p className="text-xs font-bold text-muted-foreground mt-0.5">${p.price}</p>
+                          </div>
+                          <CornerDownLeft size={16} className={`opacity-0 group-hover:opacity-40 transition-opacity ${selectedIndex === itemIndex ? 'opacity-40' : ''}`} />
+                        </Link>
+                      );
+                    })}
                   </div>
                 ) : (
-                  <p className="text-sm text-muted-foreground py-4 text-center">No products found for "{query}"</p>
+                  <div className="py-12 text-center">
+                    <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Search size={24} className="text-muted-foreground opacity-30" />
+                    </div>
+                    <p className="text-sm font-black">No products found</p>
+                    <p className="text-xs text-muted-foreground mt-1">Try a different keyword or category</p>
+                  </div>
                 )}
               </section>
             )}
@@ -247,9 +275,9 @@ export function SearchAutocomplete() {
 
           {/* ── Footer ── */}
           <div className="search-dropdown__footer">
-            <span className="flex items-center gap-1.5"><kbd>↑↓</kbd> to navigate</span>
-            <span className="flex items-center gap-1.5"><kbd>↵</kbd> to select</span>
-            <span className="flex items-center gap-1.5 ml-auto"><kbd>ESC</kbd> to close</span>
+            <span className="flex items-center gap-2"><kbd>↑↓</kbd> navigate</span>
+            <span className="flex items-center gap-2"><kbd>↵</kbd> select</span>
+            <span className="flex items-center gap-2 ml-auto opacity-50"><kbd>ESC</kbd> close</span>
           </div>
         </div>
       )}
