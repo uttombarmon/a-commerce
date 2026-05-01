@@ -4,6 +4,9 @@ import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CartDrawer } from "@/components/cart/CartDrawer";
+import { CartProvider } from "@/context/CartContext";
+import { AuthProvider } from "@/components/auth/AuthProvider";
+import { LayoutWrapper } from "@/components/layout/LayoutWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,9 +14,6 @@ export const metadata: Metadata = {
   title: "ACommerce - The Ultimate Marketplace",
   description: "Shop everything you need with ACommerce",
 };
-
-import { CartProvider } from "@/context/CartContext";
-import { AuthProvider } from "@/components/auth/AuthProvider";
 
 export default function RootLayout({
   children,
@@ -25,11 +25,9 @@ export default function RootLayout({
       <body className={`${inter.className} bg-gray-100 dark:bg-gray-950 min-h-screen flex flex-col`}>
         <AuthProvider>
           <CartProvider>
-            <Navbar />
-            <main className="flex-grow flex flex-col">
+            <LayoutWrapper>
               {children}
-            </main>
-            <Footer />
+            </LayoutWrapper>
             <CartDrawer />
           </CartProvider>
         </AuthProvider>

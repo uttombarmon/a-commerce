@@ -26,7 +26,7 @@
 .pdp-page {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 120px 24px 80px;
+  padding: 24px 24px 80px;
   background-color: var(--background);
 }
 
@@ -356,7 +356,7 @@
 
 /* ── Responsive Refinements ─────────────────────────── */
 @media (max-width: 1023px) {
-  .pdp-page { padding-top: 80px; }
+  .pdp-page { padding-top: 12px; }
   .pdp-layout { gap: 40px; }
   .pdp-layout__sidebar { order: 2; }
 }

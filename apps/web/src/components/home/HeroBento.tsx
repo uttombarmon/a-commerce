@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export function HeroBento() {
   return (
-    <section className="pt-32 pb-8 px-4 md:px-6 max-w-7xl mx-auto w-full">
+    <section className="pt-8 pb-8 px-4 md:px-6 max-w-7xl mx-auto w-full">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 h-auto md:h-[600px]">
         
         {/* Main large feature (spans 2 columns) */}

@@ -37,6 +37,8 @@
     --muted-foreground: #71717a;
     --card: #ffffff;
     --glass: rgba(255, 255, 255, 0.7);
+    scroll-behavior: smooth;
+    scroll-padding-top: 100px;
   }
 
   .dark {
