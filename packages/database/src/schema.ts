@@ -426,7 +426,8 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
     references: [users.id],
   }),
 }));
-function many(cartItems: PgTableWithColumns<{ name: "cart_items"; schema: undefined; columns: { id: PgColumn<{ name: "id"; tableName: "cart_items"; dataType: "number"; columnType: "PgSerial"; data: number; driverParam: number; notNull: true; hasDefault: true; enumValues: undefined; baseColumn: never; }, {}, {}>; cartId: PgColumn<{ name: "cart_id"; tableName: "cart_items"; dataType: "number"; columnType: "PgInteger"; data: number; driverParam: string | number; notNull: true; hasDefault: false; enumValues: undefined; baseColumn: never; }, {}, {}>; productId: PgColumn<{ name: "product_id"; tableName: "cart_items"; dataType: "number"; columnType: "PgInteger"; data: number; driverParam: string | number; notNull: true; hasDefault: false; enumValues: undefined; baseColumn: never; }, {}, {}>; variantId: PgColumn<{ name: "variant_id"; tableName: "cart_items"; dataType: "number"; columnType: "PgInteger"; data: number; driverParam: string | number; notNull: false; hasDefault: false; enumValues: undefined; baseColumn: never; }, {}, {}>; quantity: PgColumn<{ name: "quantity"; tableName: "cart_items"; dataType: "number"; columnType: "PgInteger"; data: number; driverParam: string | number; notNull: true; hasDefault: true; enumValues: undefined; baseColumn: never; }, {}, {}>; createdAt: PgColumn<{ name: "created_at"; tableName: "cart_items"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: true; enumValues: undefined; baseColumn: never; }, {}, {}>; }; dialect: "pg"; }>): any {
+// Replaced line
+function many(cartItemsTable: typeof cartItems): any {
   throw new Error('Function not implemented.');
 }
 

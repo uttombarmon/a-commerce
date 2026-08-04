@@ -2,8 +2,9 @@
   "name": "database",
   "version": "0.1.0",
   "private": true,
-  "main": "./src/index.ts",
+  "main": "./dist/index.js",
   "scripts": {
+    "build": "tsc",
     "generate": "drizzle-kit generate:pg",
     "push": "drizzle-kit push:pg",
     "studio": "drizzle-kit studio",
@@ -11,12 +12,13 @@
     "reset": "ts-node src/reset.ts"
   },
   "dependencies": {
-    "drizzle-orm": "^0.30.0",
-    "postgres": "^3.4.0",
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "drizzle-orm": "0.45.2",
+    "next": "16.3.0",
+    "postgres": "^3.4.0"
   },
   "devDependencies": {
-    "drizzle-kit": "^0.20.0",
+    "drizzle-kit": "0.31.10",
     "ts-node": "^10.9.1",
     "typescript": "^5.3.2"
   }

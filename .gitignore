@@ -1,70 +1,140 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
+# ============================================================
+# Dependencies
+# ============================================================
 node_modules/
 .pnp
 .pnp.js
 .yarn/
+.pnpm-store/
 
-# testing
-coverage/
-.nyc_output
-
-# next.js
-.next/
-out/
-build-manifest.json
-run-manifest.json
-sls-info.json
-.next-server
-
-# production
+# ============================================================
+# Build Outputs
+# ============================================================
 build/
 dist/
 bin/
+out/
 
-# misc
-.DS_Store
-*.pem
+# ============================================================
+# Next.js
+# ============================================================
+.next/
+build-manifest.json
+run-manifest.json
+sls-info.json
+.next-server/
+next-env.d.ts
+
+# ============================================================
+# TypeScript
+# ============================================================
+*.tsbuildinfo
+tsbuildinfo
+
+# ============================================================
+# Testing & Coverage
+# ============================================================
+coverage/
+.nyc_output/
+*.lcov
+
+# ============================================================
+# Environment Variables
+# ============================================================
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-.env.sample
+.env.staging
+.env.*.local
 !.env.example
 
-# debug
+# ============================================================
+# Docker
+# ============================================================
+.docker/
+
+# ============================================================
+# Database
+# ============================================================
+*.db
+*.sqlite
+*.sqlite3
+.drizzle/
+drizzle/meta/
+
+# ============================================================
+# Logs
+# ============================================================
 *.log
+logs/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+lerna-debug.log*
 
-# IDE
+# ============================================================
+# OS / System Files
+# ============================================================
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+$RECYCLE.BIN/
+
+# ============================================================
+# IDE & Editor
+# ============================================================
 .idea/
 .vscode/
 *.swp
 *.swo
+*.swn
 .project
 .classpath
 .settings/
 .factorypath
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-# local
+# ============================================================
+# Monorepo / Build Tools
+# ============================================================
 .turbo/
-.vercel
 .cache/
-tsbuildinfo
-*.tsbuildinfo
+.parcel-cache/
+.rollup.cache/
 
-# Database
-*.db
-*.sqlite
-.drizzle/
+# ============================================================
+# Deployment
+# ============================================================
+.vercel
+.netlify/
+.serverless/
 
+# ============================================================
+# Security
+# ============================================================
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+*.pfx
+
+# ============================================================
 # Misc
+# ============================================================
 .eslintcache
 *.local
-Thumbs.db
-.pnpm-store/
+*.tgz
+*.tar.gz
+.temp/
+tmp/
