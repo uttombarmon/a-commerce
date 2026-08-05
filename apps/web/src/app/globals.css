@@ -1,6 +1,10 @@
 @import "tailwindcss";
+@import "@fontsource-variable/inter";
 
 @theme {
+  /* Typography */
+  --font-sans: 'Inter Variable', 'Inter', system-ui, -apple-system, sans-serif;
+
   /* Modern sleek palette */
   --color-primary: #000000;
   --color-primary-foreground: #ffffff;
@@ -60,6 +64,7 @@
   body {
     background-color: var(--background);
     color: var(--foreground);
+    font-family: var(--font-sans);
     @apply antialiased selection:bg-brand selection:text-white;
   }
 }

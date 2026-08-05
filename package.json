@@ -1,16 +1,12 @@
 {
   "name": "acommerce-scaffold",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
-    "dev": "concurrently \"npm run dev --workspace=api\" \"npm run dev --workspace=web\"",
-    "build": "npm run build --workspaces --if-present",
-    "lint": "npm run lint --workspaces --if-present",
-    "db:generate": "npm run generate --workspace=database",
-    "db:push": "npm run push --workspace=database"
+    "dev": "concurrently \"pnpm --filter api dev\" \"pnpm --filter web dev\"",
+    "build": "pnpm -r run build --if-present",
+    "lint": "pnpm -r run lint --if-present",
+    "db:generate": "pnpm --filter database run generate",
+    "db:push": "pnpm --filter database run push"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3"

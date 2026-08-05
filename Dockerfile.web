@@ -10,7 +10,7 @@ COPY apps/web/package.json ./apps/web/
 COPY packages/database/package.json ./packages/database/
 
 # Install dependencies
-RUN npm ci
+RUN pnpm ci
 
 # Copy source code
 COPY apps/web ./apps/web
@@ -20,7 +20,7 @@ COPY apps/web ./apps/web
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:4000/api/v1}
 
-RUN npm run build --workspace=web
+RUN pnpm run build --workspace=web
 
 FROM node:20-alpine AS runner
 WORKDIR /app
@@ -34,7 +34,7 @@ COPY apps/web/package.json ./apps/web/
 COPY packages/database/package.json ./packages/database/
 
 # Install only production dependencies
-RUN npm ci --omit=dev
+RUN pnpm ci --omit=dev
 
 # Copy built artifacts from builder
 COPY --from=builder /app/apps/web/.next ./apps/web/.next
@@ -42,4 +42,4 @@ COPY --from=builder /app/apps/web/public ./apps/web/public
 # Note: Since standalone isn't enabled, we need to bring all node_modules and the source folder structure
 
 EXPOSE 3000
-CMD ["npm", "start", "--workspace=web"]
+CMD ["pnpm", "start", "--workspace=web"]
