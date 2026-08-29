@@ -3,13 +3,13 @@
   "private": true,
   "scripts": {
     "dev": "concurrently \"pnpm --filter api dev\" \"pnpm --filter web dev\"",
-    "build": "pnpm -r run build --if-present",
-    "lint": "pnpm -r run lint --if-present",
+    "build": "pnpm -r --if-present run build",
+    "lint": "pnpm -r --if-present run lint",
     "db:generate": "pnpm --filter database run generate",
-    "db:push": "pnpm --filter database run push"
-  },
-  "dependencies": {
-    "bcryptjs": "^3.0.3"
+    "db:push": "pnpm --filter database run push",
+    "db:seed": "pnpm --filter database run seed",
+    "db:reset": "pnpm --filter database run reset",
+    "db:studio": "pnpm --filter database run studio"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"

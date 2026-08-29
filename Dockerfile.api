@@ -1,53 +1,57 @@
-FROM node:20-alpine AS builder
+FROM node:20-alpine AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable && corepack prepare pnpm@latest --activate
 WORKDIR /app
 
-# Copy package manifests
-COPY package*.json ./
+# --- Builder Stage ---
+FROM base AS builder
+WORKDIR /app
+
+# Copy workspace config and package manifests
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
 COPY apps/api/package.json ./apps/api/
 COPY apps/web/package.json ./apps/web/
 COPY packages/database/package.json ./packages/database/
 
 # Install all dependencies
-RUN pnpm ci
+RUN pnpm install --frozen-lockfile || pnpm install
 
-# Copy source code
+# Copy source files
 COPY packages/database ./packages/database
 COPY apps/api ./apps/api
 
-# Build API and dependencies
-RUN pnpm run build --workspace=database && pnpm run build --workspace=api
+# Build database package and API
+RUN pnpm --filter database build && pnpm --filter api build
 
 
-# --- Target for DB Setup (Preserves devDependencies like drizzle-kit) ---
-FROM node:20-alpine AS db-setup
+# --- Target for Database Migration / Push Setup ---
+FROM base AS db-setup
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
 COPY packages/database ./packages/database
-
-# Copy node_modules from builder so CLI tools are available
 COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/packages/database/node_modules ./packages/database/node_modules
 
-CMD ["pnpm", "run", "db:push"]
+CMD ["pnpm", "--filter", "database", "run", "push"]
 
 
-# --- Target for Production API ---
-FROM node:20-alpine AS runner
+# --- Target for Production API Runner ---
+FROM base AS runner
 WORKDIR /app
+ENV NODE_ENV=production
 
-# Copy package files
-COPY package*.json ./
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
 COPY apps/api/package.json ./apps/api/
 COPY packages/database/package.json ./packages/database/
 
-# Install production dependencies (workspace symlinks created properly)
-RUN pnpm ci --omit=dev
+# Install production dependencies only
+RUN pnpm install --prod --frozen-lockfile || pnpm install --prod
 
-# Copy compiled API build output from builder stage
+# Copy build artifacts from builder
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
-
-# Copy database package from builder (includes compiled dist and src for drizzle)
-COPY --from=builder /app/packages/database ./packages/database
+COPY --from=builder /app/packages/database/dist ./packages/database/dist
 
 EXPOSE 4000
-CMD ["pnpm", "start", "--workspace=api"]
+CMD ["node", "apps/api/dist/index.js"]

@@ -1,45 +1,45 @@
-FROM node:20-alpine AS builder
+FROM node:20-alpine AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable && corepack prepare pnpm@latest --activate
 WORKDIR /app
 
-# Copy root package.json and lockfile
-COPY package*.json ./
+# --- Builder Stage ---
+FROM base AS builder
+WORKDIR /app
 
-# Copy workspace package.json files
+# Copy workspace config and package manifests
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
 COPY apps/api/package.json ./apps/api/
 COPY apps/web/package.json ./apps/web/
 COPY packages/database/package.json ./packages/database/
 
 # Install dependencies
-RUN pnpm ci
+RUN pnpm install --frozen-lockfile || pnpm install
 
 # Copy source code
 COPY apps/web ./apps/web
 
-# Build the Web app
-# Pass environment variable for build time if necessary (optional here)
+# Build argument for Next.js API URL
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:4000/api/v1}
 
-RUN pnpm run build --workspace=web
+# Build Next.js app in standalone mode
+RUN pnpm --filter web build
 
+# --- Production Runner Stage ---
 FROM node:20-alpine AS runner
 WORKDIR /app
 
-# Copy root package.json and lockfile
-COPY package*.json ./
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
-# Copy workspace package.json files
-COPY apps/api/package.json ./apps/api/
-COPY apps/web/package.json ./apps/web/
-COPY packages/database/package.json ./packages/database/
-
-# Install only production dependencies
-RUN pnpm ci --omit=dev
-
-# Copy built artifacts from builder
-COPY --from=builder /app/apps/web/.next ./apps/web/.next
+# Copy standalone output and static assets
 COPY --from=builder /app/apps/web/public ./apps/web/public
-# Note: Since standalone isn't enabled, we need to bring all node_modules and the source folder structure
+COPY --from=builder /app/apps/web/.next/standalone ./
+COPY --from=builder /app/apps/web/.next/static ./apps/web/.next/static
 
 EXPOSE 3000
-CMD ["pnpm", "start", "--workspace=web"]
+CMD ["node", "apps/web/server.js"]
+
